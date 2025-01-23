@@ -18,19 +18,35 @@ public class UI_MainUI : MonoBehaviour
     [Header("GameOver UI")]
     [SerializeField] private TextMeshProUGUI endOverScore;
 
+    [Header("Timer")]
+    [SerializeField] private TextMeshProUGUI timer;
+
+    float startTime;
+
     private void Start()
     {
         GameStateManager.UpdateGameState(GameState.Menu);
     }
 
+    private void Update()
+    {
+        Timer();
+    }
+
     private void OnEnable()
     {
         GameStateManager.OnGameStateChange += GameStateUI;
+
+        GameStateManager.OnGameStateChange += StartTimer;
+        GameStateManager.OnGameStateChange += PauseTimer;
     }
 
     private void OnDisable()
     {
         GameStateManager.OnGameStateChange -= GameStateUI;
+
+        GameStateManager.OnGameStateChange -= StartTimer;
+        GameStateManager.OnGameStateChange -= PauseTimer;
     }
 
     #region ChangeGameState
@@ -83,6 +99,37 @@ public class UI_MainUI : MonoBehaviour
                 GameOverMenu.SetActive(true);
                 break;
         }
+    }
+
+    private void StartTimer(GameState gameState)
+    {
+        if (gameState == GameState.InGame)
+            startTime = Time.time;
+    }
+
+    private void PauseTimer(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.InGame:
+                Time.timeScale = 1;
+                break;
+            case GameState.Pause:
+                Time.timeScale = 0;
+                break;
+        }
+    }
+
+    private void Timer()
+    {
+        float time = Time.time - startTime;
+
+        int seconds, minute;
+
+        seconds = Mathf.FloorToInt(time % 60);
+        minute = Mathf.FloorToInt(time/60);
+
+        timer.text = $"{minute}:{seconds}";
     }
 
     private void UpdateGameScoreUI(int score)
