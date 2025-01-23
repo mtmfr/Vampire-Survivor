@@ -20,6 +20,7 @@ public class UI_MainUI : MonoBehaviour
 
     private void Start()
     {
+        GameStateManager.UpdateGameState(GameState.Menu);
     }
 
     private void OnEnable()

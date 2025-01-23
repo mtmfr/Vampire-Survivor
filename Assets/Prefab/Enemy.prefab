@@ -178,4 +178,4 @@ MonoBehaviour:
   Xp: {fileID: 3244857634619798784, guid: 0ade3de441f704047b6525223bc9049f, type: 3}
   enemyStats: {fileID: 11400000, guid: fe4e9e411242fbb4e8c2573f3a57d918, type: 2}
   pushbackForce: 500
-  canMove: 0
+  canMove: 1

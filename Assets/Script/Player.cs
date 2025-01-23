@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
         currentLevel = 1;
 
 
-        GameStateManager.OnUpdateCanMove += UpdateCanMove;
+        GameStateManager.OnGameStateChange += UpdateCanMove;
         GameStateManager.OnGameStateChange += SetVisibility;
         GameStateManager.OnGameStateChange += Attack;
 
@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        GameStateManager.OnUpdateCanMove -= UpdateCanMove;
+        GameStateManager.OnGameStateChange -= UpdateCanMove;
         GameStateManager.OnGameStateChange -= SetVisibility;
         GameStateManager.OnGameStateChange -= Attack;
 
@@ -132,9 +132,13 @@ public class Player : MonoBehaviour
     /// update the value of canMove
     /// </summary>
     /// <param name="canMove">wather canMove is true or false</param>
-    private void UpdateCanMove(bool canMove)
+    private void UpdateCanMove(GameState gameState)
     {
-        this.canMove = canMove;
+        canMove = gameState switch
+        {
+            GameState.InGame => true,
+            _ => false
+        };
     }
     #endregion
 
@@ -157,7 +161,6 @@ public class Player : MonoBehaviour
         StartCoroutine(AttackRoutine());
     }
 
-    #region Left and right attack Logic
     /// <summary>
     /// Do the attack on the left side of the player character
     /// </summary>
@@ -199,7 +202,6 @@ public class Player : MonoBehaviour
             PlayerEvent.AttackLand(enemy.gameObject.GetInstanceID(), attack);
         }
     }
-    #endregion
 
     #endregion
 

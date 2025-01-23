@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class UI_Player : MonoBehaviour
 {
+    [SerializeField] private GameObject PlayerUI;
+
     [SerializeField] private Slider playerHealth;
 
     [SerializeField] private Slider playerXp;
@@ -12,6 +14,8 @@ public class UI_Player : MonoBehaviour
 
     private void OnEnable()
     {
+        GameStateManager.OnGameStateChange += UpdateUI;
+
         PlayerEvent.OnSetHealth += SetPlayerHealthUI;
         PlayerEvent.OnUpdateHealth += UpdatePlayerHealthUI;
 
@@ -24,6 +28,8 @@ public class UI_Player : MonoBehaviour
 
     private void OnDisable()
     {
+        GameStateManager.OnGameStateChange -= UpdateUI;
+
         PlayerEvent.OnSetHealth -= SetPlayerHealthUI;
         PlayerEvent.OnUpdateHealth -= UpdatePlayerHealthUI;
 
@@ -34,6 +40,7 @@ public class UI_Player : MonoBehaviour
         PlayerEvent.OnMaxlevelAttained -= MaxLevelXpBar;
     }
 
+    #region Health
     private void SetPlayerHealthUI(int health)
     {
         playerHealth.maxValue = health;
@@ -45,7 +52,9 @@ public class UI_Player : MonoBehaviour
     {
         playerHealth.value = health;
     }
+    #endregion
 
+    #region Xp
     private void SetPlayerXpBar(int maxXp)
     {
         playerXp.maxValue = maxXp;
@@ -66,5 +75,15 @@ public class UI_Player : MonoBehaviour
     private void UpdateLevel(int level)
     {
         currentLevel.text = level.ToString();
+    }
+    #endregion
+
+    private void UpdateUI(GameState gameState)
+    {
+        if (gameState != GameState.InGame)
+        {
+            PlayerUI.SetActive(false);
+        }
+        else PlayerUI.SetActive(true);
     }
 }

@@ -56,14 +56,14 @@ public class Enemy : MonoBehaviour
 
         SpawnerEvent.BecomeActive(gameObject);
 
-        GameStateManager.OnUpdateCanMove += UpdateCanMove;
+        GameStateManager.OnGameStateChange += UpdateCanMove;
 
         PlayerEvent.OnAttackLand += TakeDamage;
     }
 
     private void OnDisable()
     {
-        GameStateManager.OnUpdateCanMove -= UpdateCanMove;
+        GameStateManager.OnGameStateChange -= UpdateCanMove;
 
         PlayerEvent.OnAttackLand -= TakeDamage;
     }
@@ -74,9 +74,13 @@ public class Enemy : MonoBehaviour
         playerTransform = GameObject.FindWithTag("Player").transform;
     }
 
-    private void UpdateCanMove(bool canMove)
+    private void UpdateCanMove(GameState gameState)
     {
-        this.canMove = canMove;
+        canMove = gameState switch
+        {
+            GameState.InGame => true,
+            _ => false
+        };
     }
 
     private void Move()

@@ -17,15 +17,12 @@ public static class GameStateManager
                 break;
             case GameState.InGame:
                 UpdateCanStartCountingPoint(true);
-                UpdateCanMove(true);
                 break;
             case GameState.Pause:
                 UpdateCanStartCountingPoint(false);
-                UpdateCanMove(false);
                 break;
             case GameState.GameOver:
                 UpdateCanStartCountingPoint(false);
-                UpdateCanMove(false);
                 break;
         }
         OnGameStateChange?.Invoke(gameState);
@@ -39,16 +36,6 @@ public static class GameStateManager
     private static void UpdateCanStartCountingPoint(bool canCountPoint)
     {
         OnCanStartCountingPoint?.Invoke(canCountPoint);
-    }
-
-    public static event Action<bool> OnUpdateCanMove;
-    /// <summary>
-    /// Send an event that define wether or not the player is allowed to move
-    /// </summary>
-    /// <param name="canMove">wheter or not the player can move</param>
-    private static void UpdateCanMove(bool canMove)
-    {
-        OnUpdateCanMove?.Invoke(canMove);
     }
 }
 
