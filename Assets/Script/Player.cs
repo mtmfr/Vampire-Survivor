@@ -40,8 +40,9 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Xp
+    [Header("Level")]
     private int currentLevel;
-    private int maxLevel;
+    [SerializeField] private int maxLevel;
     private int xpToLevelUp;
     private int currentXp;
     #endregion
@@ -59,8 +60,12 @@ public class Player : MonoBehaviour
 
         sprite.color = new Color32(67, 120, 229, 255);
 
+        xpToLevelUp = 15;
+        currentXp = 0;
+
         PlayerEvent.SetHealth(hp);
         PlayerEvent.SetXpToLevelUp(xpToLevelUp);
+        PlayerEvent.XpGain(currentXp);
         PlayerEvent.LevelUp(currentLevel);
 
         StopAllCoroutines();
@@ -251,6 +256,8 @@ public class Player : MonoBehaviour
         }
         else
         {
+            currentXp = currentXp + xpGained - xpToLevelUp;
+            PlayerEvent.XpGain(currentXp);
             currentLevel++;
             LevelUp();
         }
@@ -262,10 +269,11 @@ public class Player : MonoBehaviour
         {
             currentLevel++;
             PlayerEvent.LevelUp(currentLevel);
+            xpToLevelUp *= 2;
+            PlayerEvent.SetXpToLevelUp(xpToLevelUp);
         }
         else if(currentLevel + 1 == maxLevel)
         {
-            currentLevel++;
             PlayerEvent.LevelUp(currentLevel);
             xpToLevelUp = -1;
             PlayerEvent.MaxlevelAttained();

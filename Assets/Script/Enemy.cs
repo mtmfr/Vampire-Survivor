@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     private int attack;
     private float speed;
     private float attackSpeed;
+    [SerializeField] private float pushbackForce;
 
     [SerializeField] private bool canMove;
 
@@ -31,6 +32,7 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        sprite.color = baseColor;
     }
 
     // Update is called once per frame
@@ -42,12 +44,17 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
+        if (sprite != null)
+            sprite.color = baseColor;
+
         health = enemyStats.Health;
         attack = enemyStats.Attack;
         speed = enemyStats.Speed;
         attackSpeed = enemyStats.AttackSpeed;
 
-        FindPlayer();
+        FindPlayerTransform();
+
+        SpawnerEvent.BecomeActive(gameObject);
 
         GameStateManager.OnUpdateCanMove += UpdateCanMove;
 
@@ -62,7 +69,7 @@ public class Enemy : MonoBehaviour
     }
 
     #region Movement
-    private void FindPlayer()
+    private void FindPlayerTransform()
     {
         playerTransform = GameObject.FindWithTag("Player").transform;
     }
@@ -123,16 +130,25 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void PushBackOnHit()
+    {
+        Vector2 pushbackDir = playerTransform.position - transform.position;
+
+        rb.AddForce(-pushbackDir.normalized * pushbackForce);
+    }
+
     private IEnumerator HittenColorChange()
     {
         sprite.color = DamagedColor;
+        PushBackOnHit();
         yield return new WaitForSeconds(0.15f);
         sprite.color = baseColor;
     }
 
     private void Death()
     {
-        Instantiate(Xp, transform);
+        Instantiate(Xp, transform.position, Quaternion.identity);
+        SpawnerEvent.BecomeInactive(gameObject);
         gameObject.SetActive(false);
     }
 

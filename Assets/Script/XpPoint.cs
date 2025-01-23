@@ -9,11 +9,13 @@ public class XpPoint : MonoBehaviour
 
     [SerializeField] private XpScriptableObject xpSO;
     LayerMask playerLayer = 1 << 3;
+    LayerMask enemyLayer = 1 << 6;
 
     private void Start()
     {
         col = GetComponent<Collider2D>();
         col.includeLayers = playerLayer;
+        col.excludeLayers = enemyLayer;
 
         sprite = GetComponent<SpriteRenderer>();
         sprite.sprite = xpSO.xpSprite;
