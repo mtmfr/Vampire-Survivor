@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e45ebcd88d7e34abced403139f49ce, type: 3}
   m_Name: testXp
   m_EditorClassIdentifier: 
-  <xpGiven>k__BackingField: 10
+  <xpGiven>k__BackingField: 1
   <xpSprite>k__BackingField: {fileID: 21300000, guid: 1b0b3cf758b17614c977d9c05bf17deb, type: 3}

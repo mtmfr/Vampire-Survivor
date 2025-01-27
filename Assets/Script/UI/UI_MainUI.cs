@@ -117,6 +117,9 @@ public class UI_MainUI : MonoBehaviour
             case GameState.Pause:
                 Time.timeScale = 0;
                 break;
+            default:
+                Time.timeScale = 0;
+                break;
         }
     }
 
