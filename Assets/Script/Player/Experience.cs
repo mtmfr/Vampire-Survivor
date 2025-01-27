@@ -13,10 +13,9 @@ public class Experience : MonoBehaviour
     {
         currentLevel = 1;
 
-        xpToLevelUp = 15;
         currentXp = 0;
 
-        PlayerEvent.SetXpToLevelUp(xpToLevelUp);
+        PlayerEvent.SetXpToLevelUp(UpdateXpRequirement());
         PlayerEvent.XpGain(currentXp);
         PlayerEvent.LevelUp(currentLevel);
     }
@@ -48,9 +47,25 @@ public class Experience : MonoBehaviour
         {
             currentXp = currentXp + xpGained - xpToLevelUp;
             PlayerEvent.XpGain(currentXp);
-            currentLevel++;
             LevelUp();
         }
+    }
+
+    private int UpdateXpRequirement()
+    {
+        if (currentLevel == 1)
+            xpToLevelUp = 5;
+        else if (currentLevel < 20)
+            xpToLevelUp += 10;
+        else if (currentLevel == 20)
+            xpToLevelUp += 600;
+        else if (currentLevel < 40)
+            xpToLevelUp += 13;
+        else if (currentLevel == 40)
+            xpToLevelUp += 2400;
+        else xpToLevelUp += 16;
+
+        return xpToLevelUp;
     }
 
     private void LevelUp()
@@ -60,7 +75,7 @@ public class Experience : MonoBehaviour
             currentLevel++;
             PlayerEvent.LevelUp(currentLevel);
             xpToLevelUp *= 2;
-            PlayerEvent.SetXpToLevelUp(xpToLevelUp);
+            PlayerEvent.SetXpToLevelUp(UpdateXpRequirement());
         }
         else if (currentLevel + 1 == maxLevel)
         {

@@ -26,12 +26,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private bool canMove;
 
-    public static Transform playerTransform;
+    public static Rigidbody2D playerRb;
 
     #region unity functions
     private void Awake()
     {
-        playerTransform = transform;
+        playerRb = GetComponent<Rigidbody2D>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -96,6 +96,11 @@ public class Player : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             anim.SetBool("IsMoving", false);
         }
+
+        if (rb.linearVelocityX > 0)
+            sprite.flipX = false;
+        else if (rb.linearVelocityX < 0)
+            sprite.flipX = true;
     }
 
     /// <summary>

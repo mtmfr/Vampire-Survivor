@@ -27,7 +27,7 @@ public class Whip : Weapon
         if (isWeaponSpawned == true)
             return;
 
-        GameObject whip = Instantiate(WeaponOriginal, Player.playerTransform);
+        GameObject whip = Instantiate(WeaponOriginal, Player.playerRb.transform);
         
         if (whip != null)
             WhipFx = whip.GetComponent<ParticleSystem>();
@@ -54,7 +54,6 @@ public class Whip : Weapon
         var DL = LeftWhipPos + Vector2.down * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
         var DR = LeftWhipPos + Vector2.down * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
 
-        Debug.DrawLine(LeftWhipPos, RightWhipPos, Color.red);
         Debug.DrawLine(DL, DR, Color.red);
         Debug.DrawLine(UL, DL, Color.red);
         Debug.DrawLine(UR, DR, Color.red);
@@ -77,16 +76,24 @@ public class Whip : Weapon
     /// </summary>
     private void LeftAttack()
     {
+        Debug.DrawLine(LeftWhipPos, RightWhipPos, Color.red);
+
+        //Create the collider list of hit object
         List<Collider2D> leftAttackCollision;
 
-        LeftWhipPos = Player.playerTransform.position - Vector3.right * offsetFromPlayer;
+        //Set the transform of the whip
+        LeftWhipPos = Player.playerRb.position - Vector2.right * offsetFromPlayer;
 
-        SetObjectTransform.SetTransform(WhipFx.transform, Player.playerTransform);
         WhipFx.transform.position = LeftWhipPos;
+        WhipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
+        WhipFx.transform.localScale = Vector3.one;
+
+        //Attack
         WhipFx.Emit(1);
         leftAttackCollision = Physics2D.OverlapBoxAll(LeftWhipPos, attackHitbox, 0, attackLayer)
                               .ToList();
 
+        //Get all the collider in the object in the collider 
         foreach (Collider2D enemy in leftAttackCollision)
         {
             if (enemy == null)
@@ -101,16 +108,22 @@ public class Whip : Weapon
     /// </summary>
     private void RightAttack()
     {
+        //Create the collider list of hit object
         List<Collider2D> rightAttackCollision;
 
-        RightWhipPos = Player.playerTransform.position + Vector3.right * offsetFromPlayer;
+        //Set the transform of the whip
+        RightWhipPos = Player.playerRb.position + Vector2.right * offsetFromPlayer;
 
-        SetObjectTransform.SetTransform(WhipFx.transform, Player.playerTransform);
         WhipFx.transform.position = RightWhipPos;
+        WhipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
+        WhipFx.transform.localScale = new Vector3(-1, -1, 1);
+
+        //Attack
         WhipFx.Emit(1);
         rightAttackCollision = Physics2D.OverlapBoxAll(RightWhipPos, attackHitbox, 0, attackLayer)
                                .ToList();
 
+        //Get all the collider in the object in the collider 
         foreach (Collider2D enemy in rightAttackCollision)
         {
             if (enemy == null)
