@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fe185142ed354b4ba7fb6f331b9150d, type: 3}
-  m_Name: Weapon_Whip
+  m_Script: {fileID: 11500000, guid: f9d56377c8f8b964db5c27bf98810d3c, type: 3}
+  m_Name: WI_MagicWand
   m_EditorClassIdentifier: 
-  WeaponOriginal: {fileID: 7272144856290100873, guid: 5161b980811adef4cab20dc710fe3314, type: 3}
-  offsetFromPlayer: 2
+  weaponOriginal: {fileID: 6415009788383030284, guid: 4ead0074343611a48a35f21e3a6b6578, type: 3}
+  offsetFromPlayer: 0
   level: 1
-  attack: 3
+  maxLevel: 8
+  attack: 2
   projectileAmount: 2
-  speed: 1
-  cooldown: 1
-  duration: 1.2
-  attackHitbox: {x: 2.76, y: 1.29}
+  speed: 7
+  cooldown: 2
+  delay: 0.1

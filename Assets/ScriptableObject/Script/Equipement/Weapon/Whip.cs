@@ -9,13 +9,7 @@ public class Whip : Weapon
 {
     [Header("Weapon")]
     [Tooltip("The visual effect of the whip")]
-    private ParticleSystem WhipFx;
-
-    [Tooltip("The position of the right attack of the whip")]
-    private Vector2 RightWhipPos;
-
-    [Tooltip("The position of the left attack of the whip")]
-    private Vector2 LeftWhipPos;
+    private ParticleSystem whipFx;
 
     [Tooltip("Lenght and height of the whip attack hitbox")]
     [SerializeField] private Vector2 attackHitbox;
@@ -27,69 +21,128 @@ public class Whip : Weapon
         if (isWeaponSpawned == true)
             return;
 
-        GameObject whip = Instantiate(WeaponOriginal, Player.playerRb.transform);
+        GameObject whip = Instantiate(weaponOriginal, Player.playerRb.transform);
         
         if (whip != null)
-            WhipFx = whip.GetComponent<ParticleSystem>();
+            whipFx = whip.GetComponent<ParticleSystem>();
         isWeaponSpawned = false;
     }
 
+    /// <summary>
+    /// Level up the weapon
+    /// </summary>
+    public override void LevelUp()
+    {
+        //check if the weapon is at level max
+        if (level + 1 > maxLevel)
+            return;
+
+        //augment it's level
+        level++;
+
+        // do the logic of it's level up
+        switch (level)
+        {
+            case 2:
+                projectileAmount += 1;
+                break;
+            case 3:
+                attack += 5;
+                break;
+            case 4:
+                attackHitbox = attackHitbox * 1.1f;
+                attack += 5;
+                break;
+            case 5:
+                attack += 5;
+                break;
+            case 6:
+                attackHitbox = attackHitbox * 1.1f;
+                break;
+            case 7:
+                attack += 5;
+                break;
+            default:
+                attack += 5;
+                break;
+        }
+    }
+
+    #region Attack controller
     public override void StartAttack(MonoBehaviour player)
     {
-        player.StartCoroutine(AttackRoutine(player));
+        CreateNewProjectile();
+        player.StartCoroutine(AttackRoutine());
     }
 
     public override void StopAttack(MonoBehaviour player)
     {
-        player.StopCoroutine(AttackRoutine(player));
+        player.StopCoroutine(AttackRoutine());
     }
 
-    protected override IEnumerator AttackRoutine(MonoBehaviour player)
+    protected override IEnumerator AttackRoutine()
     {
-        CreateNewProjectile();
-
-        var UL = LeftWhipPos + Vector2.up * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
-        var UR = LeftWhipPos + Vector2.up * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
-
-        var DL = LeftWhipPos + Vector2.down * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
-        var DR = LeftWhipPos + Vector2.down * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
-
-        Debug.DrawLine(DL, DR, Color.red);
-        Debug.DrawLine(UL, DL, Color.red);
-        Debug.DrawLine(UR, DR, Color.red);
-
         while (true)
         {
             for (int nbOfAttack = 0; nbOfAttack < projectileAmount; nbOfAttack++)
             {
-                if (nbOfAttack % 2 != 0)
-                    LeftAttack();
-                else RightAttack();
-                yield return new WaitForSeconds(WhipFx.main.duration);
+                if (IsFirstAttackLeft())
+                {
+                    if (nbOfAttack % 2 != 0)
+                        RightAttack();
+                    else LeftAttack();
+                    yield return new WaitForSeconds(whipFx.main.duration);
+                }
+                else
+                {
+                    if (nbOfAttack % 2 != 0)
+                        LeftAttack();
+                    else RightAttack();
+                    yield return new WaitForSeconds(whipFx.main.duration);
+                }
             }
             yield return new WaitForSeconds(cooldown);
         }
     }
 
+    private bool isLastAttackLeft = false;
+    private bool IsFirstAttackLeft()
+    {
+        if (Player.playerRb.linearVelocityX < 0)
+        {
+            isLastAttackLeft = true;
+            return isLastAttackLeft;
+        }
+        else if (Player.playerRb.linearVelocityX > 0)
+        {
+            isLastAttackLeft = false;
+            return isLastAttackLeft;
+        }
+
+        return isLastAttackLeft;
+    }
+    #endregion
+
+    #region left/right attack logic
     /// <summary>
     /// Do the attack on the left side of the player character
     /// </summary>
     private void LeftAttack()
     {
-        Debug.DrawLine(LeftWhipPos, RightWhipPos, Color.red);
-
         //Create the collider list of hit object
         List<Collider2D> leftAttackCollision;
 
         //Set the transform of the whip
-        LeftWhipPos = Player.playerRb.position - Vector2.right * offsetFromPlayer;
+        Vector2 LeftWhipPos = Player.playerRb.position - Vector2.right * offsetFromPlayer;
 
-        WhipFx.transform.position = LeftWhipPos;
-        WhipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
-        WhipFx.transform.localScale = Vector3.one;
+        DrawAttackHitbox(LeftWhipPos);
+
+        whipFx.transform.position = LeftWhipPos;
+        whipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
+        whipFx.transform.localScale = Vector3.one;
 
         //Attack
-        WhipFx.Emit(1);
+        whipFx.Emit(1);
         leftAttackCollision = Physics2D.OverlapBoxAll(LeftWhipPos, attackHitbox, 0, attackLayer)
                               .ToList();
 
@@ -112,14 +165,16 @@ public class Whip : Weapon
         List<Collider2D> rightAttackCollision;
 
         //Set the transform of the whip
-        RightWhipPos = Player.playerRb.position + Vector2.right * offsetFromPlayer;
+        Vector2 RightWhipPos = Player.playerRb.position + Vector2.right * offsetFromPlayer;
 
-        WhipFx.transform.position = RightWhipPos;
-        WhipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
-        WhipFx.transform.localScale = new Vector3(-1, -1, 1);
+        DrawAttackHitbox(RightWhipPos);
+
+        whipFx.transform.position = RightWhipPos;
+        whipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
+        whipFx.transform.localScale = new Vector3(-1, -1, 1);
 
         //Attack
-        WhipFx.Emit(1);
+        whipFx.Emit(1);
         rightAttackCollision = Physics2D.OverlapBoxAll(RightWhipPos, attackHitbox, 0, attackLayer)
                                .ToList();
 
@@ -131,5 +186,21 @@ public class Whip : Weapon
 
             PlayerEvent.AttackLand(enemy.gameObject.GetInstanceID(), attack);
         }
+    }
+    #endregion
+
+    private void DrawAttackHitbox(Vector2 attPos)
+    {
+        float duration = whipFx.main.duration;
+        var UL = attPos + Vector2.up * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
+        var UR = attPos + Vector2.up * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
+
+        var DL = attPos + Vector2.down * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
+        var DR = attPos + Vector2.down * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
+
+        Debug.DrawLine(UL, UR, Color.red, duration);
+        Debug.DrawLine(DL, DR, Color.red, duration);
+        Debug.DrawLine(UL, DL, Color.red, duration);
+        Debug.DrawLine(UR, DR, Color.red, duration);
     }
 }

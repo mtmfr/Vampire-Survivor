@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe185142ed354b4ba7fb6f331b9150d, type: 3}
+  m_Name: WI_Whip
+  m_EditorClassIdentifier: 
+  weaponOriginal: {fileID: 0}
+  offsetFromPlayer: 3
+  level: 1
+  maxLevel: 0
+  attack: 3
+  projectileAmount: 2
+  speed: 1
+  cooldown: 1
+  delay: 0
+  attackHitbox: {x: 3.3, y: 1.25}
