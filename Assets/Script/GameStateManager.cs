@@ -16,13 +16,10 @@ public static class GameStateManager
             case GameState.Menu:
                 break;
             case GameState.InGame:
-                UpdateCanStartCountingPoint(true);
                 break;
             case GameState.Pause:
-                UpdateCanStartCountingPoint(false);
                 break;
             case GameState.GameOver:
-                UpdateCanStartCountingPoint(false);
                 break;
         }
         OnGameStateChange?.Invoke(gameState);
@@ -43,6 +40,7 @@ public enum GameState
 {
     Menu,
     InGame,
+    LevelUp,
     GameOver,
     Pause
 }
