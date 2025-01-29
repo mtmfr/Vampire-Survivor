@@ -6,6 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MagicWand", menuName = "Scriptable Objects/Equipement/Weapon/MagicWand")]
 public class MagicWand : Weapon
 {
+    [SerializeField, Min(1)] private int nbPierceableEnemy;
+
     public override void CreateNewProjectile()
     {
         int projectileToCreate = projectileAmount - currentProjectileAmount;
@@ -24,7 +26,30 @@ public class MagicWand : Weapon
 
     public override void LevelUp()
     {
-        throw new System.NotImplementedException();
+        switch (level)
+        {
+            case 2:
+                projectileAmount++;
+                break;
+            case 3:
+                cooldown -= 0.2f;
+                break;
+            case 4:
+                projectileAmount++;
+                break;
+            case 5:
+                attack += 10;
+                break;
+            case 6:
+                projectileAmount++;
+                break;
+            case 7:
+                nbPierceableEnemy++;
+                break;
+            case 8:
+                attack += 10;
+                break;
+        }
     }
 
     public override void StartAttack(MonoBehaviour player)
@@ -48,12 +73,12 @@ public class MagicWand : Weapon
                 {
                     spell.transform.position = Player.playerRb.position;
                     spell.SetActive(true);
-                    spell.GetComponent<MagicWandProjectile>().UpdateProjectileInfo(FindClosestEnemy(), speed, attack);
+                    spell.GetComponent<MagicWandProjectile>().UpdateProjectileInfo(FindClosestEnemy(), speed, attack, nbPierceableEnemy);
                     yield return new WaitForSeconds(delay);
                 }
                 yield return new WaitForSeconds(cooldown);
             }
-            else yield return new WaitForEndOfFrame();
+            else yield return new WaitForFixedUpdate();
         }
     }
 

@@ -2,15 +2,21 @@ using UnityEngine;
 
 public class MinValue : PropertyAttribute
 {
-    MinValue(int value)
+    
+    MinValue(byte value, byte min)
     {
-        if (value < 0)
-            value = 0;
+        if (value < min)
+            value = min;
+    }
+    MinValue(int value, int min)
+    {
+        if (value < min)
+            value = min;
     }
 
-    MinValue(float value)
+    MinValue(float value, float min)
     {
-        if (value < 0)
-            value = 0;
+        if (value < min)
+            value = min;
     }
 }
