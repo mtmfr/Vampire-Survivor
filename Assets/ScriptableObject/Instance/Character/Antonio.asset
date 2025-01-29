@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a2f9ec3c3cff46499d3b5d0d1e45681, type: 3}
+  m_Script: {fileID: 11500000, guid: 81b6cdf47f4396d4aa7662d140cc9422, type: 3}
   m_Name: Antonio
   m_EditorClassIdentifier: 
+  <characterName>k__BackingField: Antonio
   <CharacterSprite>k__BackingField: {fileID: 6073313086934444795, guid: 0a7a8eab1aa605a4ba93721f4fc33e99, type: 3}
   <CharacterAnim>k__BackingField: {fileID: 9100000, guid: 441ab31b335bf704697c0606858cb9b2, type: 2}
   <StartingWeapon>k__BackingField: {fileID: 11400000, guid: 50631701d7fe3444799936e7f24ff6dd, type: 2}
