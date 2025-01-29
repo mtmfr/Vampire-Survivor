@@ -23,6 +23,9 @@ public class XpPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject.layer != 3)
+            return;
+
         XpEvent.XpGain(xpSO.xpGiven);
         Destroy(gameObject);
     }

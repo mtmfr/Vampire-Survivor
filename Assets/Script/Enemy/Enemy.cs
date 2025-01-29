@@ -6,6 +6,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Collider2D col;
     private SpriteRenderer sprite;
 
     private Transform playerTransform;
@@ -27,9 +28,12 @@ public class Enemy : MonoBehaviour
     private Color baseColor = Color.white;
     private Color DamagedColor = Color.red;
 
+    private LayerMask playerLayer = 1 << 3;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         sprite.color = baseColor;
@@ -138,7 +142,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 pushbackDir = playerTransform.position - transform.position;
 
-        rb.AddForce(-pushbackDir.normalized * pushbackForce);
+        rb.AddForce(pushbackDir.normalized * pushbackForce);
     }
 
     private IEnumerator HittenColorChange()
@@ -158,12 +162,14 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        StartAttacking();
+        if (collision.gameObject.layer == 3)
+            StartAttacking();
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        StopAttacking();
+        if (collision.gameObject.layer == 3)
+            StopAttacking();
     }
 }
 
