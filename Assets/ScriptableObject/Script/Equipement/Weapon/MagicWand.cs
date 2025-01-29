@@ -100,6 +100,7 @@ public class MagicWand : Weapon
             return null;
 
         Enemy closestEnemy = enemy.OrderBy(order => Vector3.Distance(Player.playerRb.position, order.transform.position)).FirstOrDefault();
+
         return closestEnemy.gameObject;
     }
 }

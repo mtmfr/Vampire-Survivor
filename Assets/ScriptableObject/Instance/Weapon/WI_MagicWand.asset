@@ -21,3 +21,4 @@ MonoBehaviour:
   speed: 7
   cooldown: 2
   delay: 0.1
+  nbPierceableEnemy: 1
