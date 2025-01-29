@@ -44,7 +44,9 @@ public class Player : MonoBehaviour
 
         sprite.sprite = currentCharacter.CharacterSprite;
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
-        inventory.Weapons.Add(currentCharacter.StartingWeapon);
+
+        Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
+        inventory.Weapons.Add(startWeapon);
 
         PlayerEvent.SetHealth(hp);
     }
