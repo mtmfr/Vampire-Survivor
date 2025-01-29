@@ -12,10 +12,15 @@ public class Player : MonoBehaviour
     private Inventory inventory;
     #endregion
 
+    #region ChildrenComponent
+    [SerializeField] private SpriteRenderer healthBar;
+    #endregion
+
     #region Stats
     [Header("Player Stats")]
     [SerializeField] private PlayerStats playerStats;
 
+    private int maxHp;
     private int hp;
     private float speed;
     #endregion
@@ -55,9 +60,11 @@ public class Player : MonoBehaviour
     {
         transform.position = startingPos;
 
-        hp = playerStats.Health;
+        maxHp = playerStats.Health;
+        hp = maxHp;
         speed = playerStats.Speed;
 
+        UpdateHealthBar();
 
         GameStateManager.OnGameStateChange += UpdateCanMove;
         GameStateManager.OnGameStateChange += Attack;
@@ -154,7 +161,18 @@ public class Player : MonoBehaviour
             hp = 0;
             Death();
         }
+
+        UpdateHealthBar();
         PlayerEvent.UpdateHealth(hp);
+    }
+
+    private void UpdateHealthBar()
+    {
+        float healthBarSize = (float)hp / maxHp;
+
+        Debug.Log(healthBarSize);
+
+        healthBar.size = new Vector2(healthBarSize, healthBar.size.y);
     }
 
     /// <summary>

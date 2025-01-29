@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2679dc674d6e1c84a9f999532c33d3a7, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  <Health>k__BackingField: 20
+  <Health>k__BackingField: 50
   <Speed>k__BackingField: 4
   <Attack>k__BackingField: 5
   <AttackSpeed>k__BackingField: 0.7
