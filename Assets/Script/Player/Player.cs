@@ -66,6 +66,8 @@ public class Player : MonoBehaviour
 
         UpdateHealthBar();
 
+        PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
+
         GameStateManager.OnGameStateChange += UpdateCanMove;
         GameStateManager.OnGameStateChange += Attack;
 
@@ -74,6 +76,8 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+        PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
+
         GameStateManager.OnGameStateChange -= UpdateCanMove;
         GameStateManager.OnGameStateChange -= Attack;
 
@@ -87,6 +91,11 @@ public class Player : MonoBehaviour
             Move(InputManager.Instance.MovementDir);
     }
     #endregion
+
+    private void UpdateCurrentCharacter(SO_Character character)
+    {
+        currentCharacter = character;
+    }
 
     #region movement
     /// <summary>
@@ -242,5 +251,11 @@ public static class PlayerEvent
     public static void AttackLand(int objectId, int damage)
     {
         OnAttackLand?.Invoke(objectId, damage);
+    }
+
+    public static event Action<SO_Character> OnCharacterChosen;
+    public static void CharacterChosen(SO_Character characterToUse)
+    {
+        OnCharacterChosen?.Invoke(characterToUse);
     }
 }

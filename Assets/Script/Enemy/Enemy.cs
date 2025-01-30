@@ -142,7 +142,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 pushbackDir = playerTransform.position - transform.position;
 
-        rb.AddForce(pushbackDir.normalized * pushbackForce);
+        rb.AddForce(-pushbackDir.normalized * pushbackForce);
     }
 
     private IEnumerator HittenColorChange()

@@ -27,7 +27,7 @@ public class Inventory : MonoBehaviour
 
     private void ClearWeaponList(GameState gameState)
     {
-        if (gameState != GameState.GameOver)
+        if (gameState != GameState.Menu)
             return;
 
         Weapons.Clear();
