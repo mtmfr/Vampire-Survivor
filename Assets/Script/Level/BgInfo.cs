@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BgInfo : MonoBehaviour
 {
-    [SerializeField] private SO_CurrentLevel currentLevel;
+    [SerializeField] private SO_Stage currentLevel;
     public int id;
-    public Sprite bgSprite { get => currentLevel.BgSprite; }
+    public Sprite BgSprite { get => currentLevel.BgSprite; }
 }

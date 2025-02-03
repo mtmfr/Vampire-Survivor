@@ -92,6 +92,10 @@ public class Player : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// Set the character used by the player
+    /// </summary>
+    /// <param name="character">the used character</param>
     private void UpdateCurrentCharacter(SO_Character character)
     {
         currentCharacter = character;
@@ -175,11 +179,12 @@ public class Player : MonoBehaviour
         PlayerEvent.UpdateHealth(hp);
     }
 
+    /// <summary>
+    /// Set the health bar of the player
+    /// </summary>
     private void UpdateHealthBar()
     {
         float healthBarSize = (float)hp / maxHp;
-
-        Debug.Log(healthBarSize);
 
         healthBar.size = new Vector2(healthBarSize, healthBar.size.y);
     }

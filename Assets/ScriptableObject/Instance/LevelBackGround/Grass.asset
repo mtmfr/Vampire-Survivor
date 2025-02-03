@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fabfed0f655bcd74a8e04f1ba16b48ba, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  levelName: Grass
-  <LevelBg>k__BackingField: {fileID: 5505274397315154127, guid: 2b87d191911e9254082fb654618735ad, type: 3}
-  <BgSprite>k__BackingField: {fileID: 0}
+  <StageName>k__BackingField: Grass
+  <StageDescription>k__BackingField: teshdh
+  <BgSprite>k__BackingField: {fileID: 21300000, guid: c347206643c0d514294fd0eb5d4d3496, type: 3}

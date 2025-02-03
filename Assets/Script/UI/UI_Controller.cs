@@ -36,21 +36,16 @@ public class UI_Controller : MonoBehaviour
 
     private void ActivateMainMenu(GameState gameState)
     {
-        MainMenu.SetActive(gameState switch
-        {
-            GameState.Menu => true,
-            _ => false
-        });
+        if (gameState == GameState.Menu)
+            MainMenu.SetActive(true);
+        else MainMenu.SetActive(false);
     }
 
     private void ActivateGameUI(GameState gameState)
     {
-        GameUI.SetActive(gameState switch
-        {
-            GameState.InGame => true,
-            GameState.LevelUp => true,
-            _ => false
-        });
+        if (gameState == GameState.InGame || gameState == GameState.LevelUp)
+            GameUI.SetActive(true);
+        else GameUI.SetActive(false);
     }
 
     private void ActivateLevelUpUI(GameState gameState)

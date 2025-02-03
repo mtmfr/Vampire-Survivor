@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81b6cdf47f4396d4aa7662d140cc9422, type: 3}
-  m_Name: Imelda
+  m_Name: Antoni
   m_EditorClassIdentifier: 
-  <characterName>k__BackingField: Imelda
-  <CharacterSprite>k__BackingField: {fileID: -5158917764184335077, guid: 0a7a8eab1aa605a4ba93721f4fc33e99, type: 3}
-  <CharacterAnim>k__BackingField: {fileID: 9100000, guid: be31821a72eff544fa564c138757c51d, type: 2}
-  <StartingWeapon>k__BackingField: {fileID: 11400000, guid: ca0ed95f36cb9c14488a9e8db389e92f, type: 2}
+  <characterName>k__BackingField: Antoni
+  <CharacterSprite>k__BackingField: {fileID: 6073313086934444795, guid: 0a7a8eab1aa605a4ba93721f4fc33e99, type: 3}
+  <CharacterAnim>k__BackingField: {fileID: 9100000, guid: 441ab31b335bf704697c0606858cb9b2, type: 2}
+  <StartingWeapon>k__BackingField: {fileID: 11400000, guid: 50631701d7fe3444799936e7f24ff6dd, type: 2}
