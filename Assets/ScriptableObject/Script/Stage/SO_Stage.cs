@@ -7,6 +7,7 @@ public class SO_Stage : ScriptableObject
     [field: SerializeField] public string StageName { get; private set; }
     [field: SerializeField] public string StageDescription { get; private set; }
     [field: SerializeField] public Sprite BgSprite { get; private set; }
+    [field: SerializeField] public MovementRestriction Restriction { get; private set; }
 
     private void OnValidate()
     {
@@ -15,4 +16,25 @@ public class SO_Stage : ScriptableObject
         UnityEditor.EditorUtility.SetDirty(this);
         #endif
     }
+}
+
+/// <summary>
+///Movement restriction of the background
+/// </summary>
+public enum MovementRestriction
+{
+    /// <summary>
+    /// Can Move However it want
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Can only move verticaly
+    /// </summary>
+    Vertical,
+
+    /// <summary>
+    /// Can only move horizontaly
+    /// </summary>
+    Horizontal
 }

@@ -47,13 +47,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         inventory = GetComponentInChildren<Inventory>();
 
-        sprite.sprite = currentCharacter.CharacterSprite;
-        anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
-
-        Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
-        inventory.Weapons.Add(startWeapon);
-
-        PlayerEvent.SetHealth(hp);
+        PlayerEvent.UpdateHealth((float)hp / maxHp);
     }
 
     private void OnEnable()
@@ -63,8 +57,6 @@ public class Player : MonoBehaviour
         maxHp = playerStats.Health;
         hp = maxHp;
         speed = playerStats.Speed;
-
-        UpdateHealthBar();
 
         PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
 
@@ -99,6 +91,11 @@ public class Player : MonoBehaviour
     private void UpdateCurrentCharacter(SO_Character character)
     {
         currentCharacter = character;
+        sprite.sprite = currentCharacter.CharacterSprite;
+        anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
+
+        Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
+        inventory.Weapons.Add(startWeapon);
     }
 
     #region movement
@@ -174,19 +171,15 @@ public class Player : MonoBehaviour
             hp = 0;
             Death();
         }
-
-        UpdateHealthBar();
-        PlayerEvent.UpdateHealth(hp);
+        StartCoroutine(DamageColorChange());
+        PlayerEvent.UpdateHealth((float)hp / maxHp);
     }
 
-    /// <summary>
-    /// Set the health bar of the player
-    /// </summary>
-    private void UpdateHealthBar()
+    private IEnumerator DamageColorChange()
     {
-        float healthBarSize = (float)hp / maxHp;
-
-        healthBar.size = new Vector2(healthBarSize, healthBar.size.y);
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        sprite.color = Color.white;
     }
 
     /// <summary>
@@ -205,6 +198,7 @@ public class Player : MonoBehaviour
         sprite.enabled = false;
         yield return new WaitForSeconds(1);
         GameStateManager.UpdateGameState(GameState.GameOver);
+        sprite.color = Color.white;
         gameObject.SetActive(false);
     }
     #endregion
@@ -213,14 +207,9 @@ public class Player : MonoBehaviour
 public static class PlayerEvent
 {
     #region Health event
-    public static event Action<int> OnSetHealth;
-    public static void SetHealth(int health)
-    {
-        OnSetHealth?.Invoke(health);
-    }
 
-    public static event Action<int> OnUpdateHealth;
-    public static void UpdateHealth(int health)
+    public static event Action<float> OnUpdateHealth;
+    public static void UpdateHealth(float health)
     {
         OnUpdateHealth?.Invoke(health);
     }

@@ -1,18 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
     [SerializeField] private SO_Stage currentLevel;
     [SerializeField] private GameObject stageBg;
-    private List<GameObject> bgPlacement = new(15);
-    private List<Transform> availableEnemySpawnPos;
+    private List<GameObject> Tiles { get; } = new(35);
+    //private List<Transform> availableEnemySpawnPos;
+    private List<GameObject> MoveTriggerTiles { get; } = new();
 
     private Transform playerTransform;
-
-    private Sprite bgSprite;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,12 +22,16 @@ public class LevelGenerator : MonoBehaviour
     {
         LevelEvent.OnLevelSelected += UpdateCurrentLevel;
         LevelEvent.OnLevelSpawn += SpawnLevelBox;
+
+        LevelTile.OnPlayerLeft += MoveTiles;
     }
 
     private void OnDisable()
     {
         LevelEvent.OnLevelSelected -= UpdateCurrentLevel;
         LevelEvent.OnLevelSpawn -= SpawnLevelBox;
+
+        LevelTile.OnPlayerLeft -= MoveTiles;
     }
 
     private void UpdateCurrentLevel(SO_Stage currentLevel)
@@ -37,58 +39,142 @@ public class LevelGenerator : MonoBehaviour
         this.currentLevel = currentLevel;
     }
 
+    #region level Tiles
     private void SpawnLevelBox()
     {
+        //Set the current stage backGround
         stageBg.GetComponent<SpriteRenderer>().sprite = currentLevel.BgSprite;
-        for (int tiles = 0; tiles < bgPlacement.Capacity; tiles++)
+
+        //instantiate the tiles 
+        for (int tiles = 0; tiles < Tiles.Capacity; tiles++)
         {
-            bgPlacement.Add(Instantiate(stageBg));
+            this.Tiles.Add(Instantiate(stageBg));
         }
 
-        if (bgPlacement.Count == 0)
+        if (Tiles.Count == 0)
             Debug.LogException(new ArgumentNullException("bgPlacement", "No background have been found"), this);
 
+        //Get the sprite size
         Vector3 spriteSize = currentLevel.BgSprite.bounds.size;
 
+        //initialize the offset
         Vector3 offset = new();
 
-        int offsetMultiplier = -2;
+        //initialize the offset multiplier on x
+        int offsetMultiplier = -3;
 
-        for (int Id = 0; Id < bgPlacement.Count; Id++)
+        MoveTriggerTiles.Clear();
+
+        //Place the tiles
+        for (int Id = 0; Id < Tiles.Count; Id++)
         {
-            GameObject bg = bgPlacement[Id];
+            GameObject bg = Tiles[Id];
 
-            if (Id < 5)
+            bg.name = $"BackGround nb {Id + 1}";
+
+            if (Id < 7)
             {
                 //1st row
-                offset.y = playerTransform.position.y + spriteSize.y;
+                offset.y = playerTransform.position.y + spriteSize.y * 2;
                 offset.x = playerTransform.position.x + spriteSize.x * offsetMultiplier;
 
                 bg.transform.position = offset;
             }
-            else if (Id < 10)
+            else if (Id < 14)
             {
                 //2nd row
+                offset.y = playerTransform.position.y + spriteSize.y; ;
+                offset.x = playerTransform.position.x + spriteSize.x * offsetMultiplier;
+
+                bg.transform.position = offset;
+            }
+            else if (Id < 21)
+            {
+                //3rd row
                 offset.y = playerTransform.position.y;
+                offset.x = playerTransform.position.x + spriteSize.x * offsetMultiplier;
+
+                bg.transform.position = offset;
+
+                if (currentLevel.Restriction == MovementRestriction.None && offsetMultiplier == 0)
+                    MoveTriggerTiles.Add(bg);
+
+                if (currentLevel.Restriction == MovementRestriction.Vertical)
+                    MoveTriggerTiles.Add(bg);
+            }
+            else if (Id < 28)
+            {
+                //4th row
+                offset.y = playerTransform.position.y - spriteSize.y;
                 offset.x = playerTransform.position.x + spriteSize.x * offsetMultiplier;
 
                 bg.transform.position = offset;
             }
             else
             {
-                //3rd row
-                offset.y = playerTransform.position.y - spriteSize.y;
+                //5th row
+                offset.y = playerTransform.position.y - spriteSize.y * 2;
                 offset.x = playerTransform.position.x + spriteSize.x * offsetMultiplier;
 
                 bg.transform.position = offset;
             }
 
+            if (currentLevel.Restriction == MovementRestriction.Horizontal)
+            {
+                if (offsetMultiplier == 0)
+                    MoveTriggerTiles.Add(bg);
+            }
+
             offsetMultiplier++;
 
-            if (offsetMultiplier >= 3)
-                offsetMultiplier = -2;
+            //if the offset multiplier is greater or equal to 3 set it to -2
+            if (offsetMultiplier > 3)
+                offsetMultiplier = -3;
+        }
+
+        SetTriggerTiles();
+    }
+    private void SetTriggerTiles()
+    {
+        if (MoveTriggerTiles.Count == 0)
+        {
+            Debug.LogException(new ArgumentNullException("moveTriggerTiles", "No tiles that are able to trigger the backGroundMovement"), this);
+            return;
+        }
+
+        foreach(GameObject triggerTile in MoveTriggerTiles)
+        {
+            Collider2D centerTileCol = triggerTile.AddComponent<BoxCollider2D>();
+            centerTileCol.isTrigger = true;
+
+            Rigidbody2D centerTileRb = triggerTile.AddComponent<Rigidbody2D>();
+            centerTileRb.bodyType = RigidbodyType2D.Static;
         }
     }
+
+    private void MoveTiles(Vector3 dir)
+    {
+        switch (currentLevel.Restriction)
+        {
+            case MovementRestriction.None:
+                break;
+            case MovementRestriction.Vertical:
+                dir.x = 0;
+                break;
+            case MovementRestriction.Horizontal:
+                dir.y = 0;
+                break;
+        }
+
+        foreach(GameObject tile in Tiles)
+        {
+            if (tile == null)
+                continue;
+
+            tile.transform.position += Vector3.Scale(currentLevel.BgSprite.bounds.size, dir);
+        }
+    }
+    #endregion
 }
 
 public static class LevelEvent
