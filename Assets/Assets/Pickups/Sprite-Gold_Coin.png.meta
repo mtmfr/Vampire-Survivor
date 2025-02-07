@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6067a2b1453a3f240a6971b3e9bf7722
+guid: a42233810102e7042b4c458f88c85c79
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7509456356974475805
-    second: Lampost_0
+      213: 8081635075838056382
+    second: Sprite-Gold_Coin_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 56
+  spritePixelsToUnits: 128
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,89 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Lampost_0
+      name: Sprite-Gold_Coin_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 56
-        height: 94
+        x: 23
+        y: 23
+        width: 82
+        height: 82
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a2b3e7ba4b26064498278b9a56c57865
-      internalID: -1587646514
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Lampost_1
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 0
-        width: 56
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 06572577b2269c6449ccc5dbabd94e27
-      internalID: 583626661
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Lampost_2
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 0
-        width: 56
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ac1bdd7fefe16de4d82592727c6599ff
-      internalID: -512659382
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Lampost_3
-      rect:
-        serializedVersion: 2
-        x: 168
-        y: 0
-        width: 56
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4b64137851bf4b647848cf3c96a93c79
-      internalID: -1854385061
+      spriteID: eb71aab784cb72070800000000000000
+      internalID: 8081635075838056382
       vertices: []
       indices: 
       edges: []
@@ -217,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d47f26d45e6b3734bad4f1aab7d82b1e
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -227,10 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Lampost_0: -1587646514
-      Lampost_1: 583626661
-      Lampost_2: -512659382
-      Lampost_3: -1854385061
+      Sprite-Gold_Coin_0: 8081635075838056382
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

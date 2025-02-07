@@ -5,23 +5,29 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     [SerializeField] private SO_Stage currentLevel;
+
     [SerializeField] private GameObject stageBg;
+    [SerializeField] private GameObject lightSource;
     private List<GameObject> Tiles { get; } = new(35);
     //private List<Transform> availableEnemySpawnPos;
     private List<GameObject> MoveTriggerTiles { get; } = new();
 
     private Transform playerTransform;
 
+    private Camera gameCamera;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerTransform = GameObject.FindWithTag("Player").transform;
+        gameCamera = Camera.main;
     }
 
     private void OnEnable()
     {
         LevelEvent.OnLevelSelected += UpdateCurrentLevel;
         LevelEvent.OnLevelSpawn += SpawnLevelBox;
+        LevelEvent.OnLevelSpawn += SetLevelTimer;
 
         LevelTile.OnPlayerLeft += MoveTiles;
     }
@@ -30,6 +36,7 @@ public class LevelGenerator : MonoBehaviour
     {
         LevelEvent.OnLevelSelected -= UpdateCurrentLevel;
         LevelEvent.OnLevelSpawn -= SpawnLevelBox;
+        LevelEvent.OnLevelSpawn -= SetLevelTimer;
 
         LevelTile.OnPlayerLeft -= MoveTiles;
     }
@@ -37,6 +44,11 @@ public class LevelGenerator : MonoBehaviour
     private void UpdateCurrentLevel(SO_Stage currentLevel)
     {
         this.currentLevel = currentLevel;
+    }
+
+    private void SetLevelTimer()
+    {
+        Timer.maxTime = currentLevel.Duration;
     }
 
     #region level Tiles
@@ -175,6 +187,11 @@ public class LevelGenerator : MonoBehaviour
         }
     }
     #endregion
+
+    private void SpawnLightSource()
+    {
+        
+    }
 }
 
 public static class LevelEvent

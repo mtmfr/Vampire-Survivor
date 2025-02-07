@@ -1,35 +1,25 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Rendering;
 
-public class Inventory : MonoBehaviour
+public static class Inventory
 {
-    public List<Weapon> Weapons { get; private set; } = new(6);
+    public static int gold;
+    public static List<Weapon> Weapons { get; private set; } = new(6);
 
-    private void OnEnable()
+    public static void NewWeaponGot(Weapon newWeapon)
     {
-        GameStateManager.OnGameStateChange += ClearWeaponList;
-        WeaponEvents.OnGetNewWeapon += NewWeaponGot;
+        Weapons.Add(newWeapon);
     }
 
-    private void OnDisable()
+    public static void ClearWeaponList()
     {
-        GameStateManager.OnGameStateChange -= ClearWeaponList;
-        WeaponEvents.OnGetNewWeapon -= NewWeaponGot;
-    }
-
-    private void NewWeaponGot(Weapon newWeapon)
-    {
-        if (Weapons.Contains(newWeapon))
-            return;
-
-            Weapons.Add(newWeapon);
-    }
-
-    private void ClearWeaponList(GameState gameState)
-    {
-        if (gameState != GameState.Menu)
-            return;
-
         Weapons.Clear();
+    }
+
+    public static event Action<int> OnGoldValueChanged;
+    public static void GoldValueChanged(int newGold)
+    {
+        OnGoldValueChanged?.Invoke(newGold);
     }
 }

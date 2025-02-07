@@ -5,6 +5,8 @@ public static class GameStateManager
 {
     public static event Action<GameState> OnGameStateChange;
 
+    private static int gameGold;
+
     /// <summary>
     /// Do actions based off the current state of the game
     /// </summary>
@@ -14,12 +16,16 @@ public static class GameStateManager
         switch (gameState)
         {
             case GameState.Menu:
+                Inventory.ClearWeaponList();
                 break;
             case GameState.InGame:
+                Inventory.GoldValueChanged(Inventory.gold);
                 break;
             case GameState.Pause:
                 break;
             case GameState.GameOver:
+                gameGold += Inventory.gold;
+                Inventory.gold = 0;
                 break;
         }
         OnGameStateChange?.Invoke(gameState);

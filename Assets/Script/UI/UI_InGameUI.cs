@@ -6,45 +6,39 @@ public class UI_InGameUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timerText;
 
+    [SerializeField] private TextMeshProUGUI goldText;
+
     [SerializeField] private Slider playerXp;
     [SerializeField] private TextMeshProUGUI currentLevel;
     [SerializeField] private GameObject maxLevel;
 
-    private float timer;
-
-    private bool canCountTime;
-
-
-    private void Update()
-    {
-        if (canCountTime)
-            CountTime();
-    }
 
     private void OnEnable()
     {
-        GameStateManager.OnGameStateChange += ControlTimer;
-        GameStateManager.OnGameStateChange += ResetTimer;
-
         PlayerEvent.OnSetXpToLevelUp += SetPlayerXpBar;
         PlayerEvent.OnXpGain += UpdatePlayerXpBar;
         PlayerEvent.OnLevelUp += UpdateLevel;
 
         PlayerEvent.OnMaxlevelAttained += MaxLevelXpBar;
 
+        Inventory.OnGoldValueChanged += UpdateGold;
+
+        TimerEvent.OnTimeChange += DisplayTime;
+
         GameStateManager.UpdateGameState(GameState.InGame);
     }
 
     private void OnDisable()
     {
-        GameStateManager.OnGameStateChange -= ControlTimer;
-        GameStateManager.OnGameStateChange -= ResetTimer;
-
         PlayerEvent.OnSetXpToLevelUp -= SetPlayerXpBar;
         PlayerEvent.OnXpGain -= UpdatePlayerXpBar;
         PlayerEvent.OnLevelUp -= UpdateLevel;
 
         PlayerEvent.OnMaxlevelAttained -= MaxLevelXpBar;
+
+        Inventory.OnGoldValueChanged -= UpdateGold;
+
+        TimerEvent.OnTimeChange -= DisplayTime;
     }
 
     #region Xp
@@ -72,34 +66,26 @@ public class UI_InGameUI : MonoBehaviour
     #endregion
 
     #region Timer
-    private void ControlTimer(GameState State)
-    {
-        canCountTime = State switch
-        {
-            GameState.InGame => true,
-            _ => false
-        };
-    }
 
-    private void CountTime()
+    private void DisplayTime(int minutes, int seconds)
     {
-        timer += Time.deltaTime;
-
-        int seconds, minutes;
-        seconds = Mathf.FloorToInt(timer % 60);
-        minutes = Mathf.FloorToInt(timer / 60);
+        string secondsDisplay;
+        string minuteDisplay;
 
         if (seconds < 10)
-            timerText.text = $"{minutes}:0{seconds}";
-        else timerText.text = $"{minutes}:{seconds}";
-    }
+            secondsDisplay = $"0{seconds}";
+        else secondsDisplay = seconds.ToString();
 
-    private void ResetTimer(GameState gameState)
-    {
-        if (gameState != GameState.Menu)
-            return;
+        if (minutes < 10)
+            minuteDisplay = $"0{minutes}";
+        else minuteDisplay = minutes.ToString();
 
-        timer = 0;
+        timerText.text = $"{minuteDisplay}:{secondsDisplay}";
     }
     #endregion
+
+    private void UpdateGold(int gold)
+    {
+        goldText.text = gold.ToString();
+    }
 }

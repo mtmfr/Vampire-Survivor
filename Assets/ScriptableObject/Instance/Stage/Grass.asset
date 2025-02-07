@@ -16,3 +16,5 @@ MonoBehaviour:
   <StageDescription>k__BackingField: here to touch some grass
   <BgSprite>k__BackingField: {fileID: 21300000, guid: c347206643c0d514294fd0eb5d4d3496, type: 3}
   <Restriction>k__BackingField: 0
+  <Duration>k__BackingField: 0
+  <LightSourceSprite>k__BackingField: {fileID: 0}

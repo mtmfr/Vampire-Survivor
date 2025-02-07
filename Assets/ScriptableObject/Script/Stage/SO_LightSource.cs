@@ -5,7 +5,5 @@ using UnityEngine;
 public class SO_LightSource : ScriptableObject
 {
     [field: SerializeField] public string Name { get; private set; }
-    [field: SerializeField] public AnimatorOverrideController animator { get; private set; }
-
-    [field: SerializeField] public GameObject droppedItem { get; private set; }
+    [field: SerializeField] public AnimatorOverrideController Animator { get; private set; }
 }

@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private Animator anim;
-    private Inventory inventory;
     #endregion
 
     #region ChildrenComponent
@@ -45,7 +44,6 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
-        inventory = GetComponentInChildren<Inventory>();
 
         PlayerEvent.UpdateHealth((float)hp / maxHp);
     }
@@ -59,6 +57,7 @@ public class Player : MonoBehaviour
         speed = playerStats.Speed;
 
         PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
+        PlayerEvent.OnRegainHealth += RegainHealth;
 
         GameStateManager.OnGameStateChange += UpdateCanMove;
         GameStateManager.OnGameStateChange += Attack;
@@ -68,7 +67,8 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
+        PlayerEvent.OnCharacterChosen -= UpdateCurrentCharacter;
+        PlayerEvent.OnRegainHealth -= RegainHealth;
 
         GameStateManager.OnGameStateChange -= UpdateCanMove;
         GameStateManager.OnGameStateChange -= Attack;
@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
 
         Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
-        inventory.Weapons.Add(startWeapon);
+        Inventory.Weapons.Add(startWeapon);
     }
 
     #region movement
@@ -142,13 +142,13 @@ public class Player : MonoBehaviour
         switch (state)
         {
             case GameState.InGame:
-                foreach (Weapon weapon in inventory.Weapons)
+                foreach (Weapon weapon in Inventory.Weapons)
                 {
                     weapon.StartAttack(this);
                 }
                 break;
             case GameState.Pause:
-                foreach (Weapon weapon in inventory.Weapons)
+                foreach (Weapon weapon in Inventory.Weapons)
                 {
                     weapon.StopAttack(this);
                 }
@@ -158,6 +158,14 @@ public class Player : MonoBehaviour
     #endregion
 
     #region health related function
+
+    private void RegainHealth(int healthRegained)
+    {
+        if (hp + healthRegained >= maxHp)
+            hp = maxHp;
+        else hp += healthRegained;
+    }
+
     /// <summary>
     /// Make the player lose health
     /// </summary>
@@ -208,48 +216,30 @@ public static class PlayerEvent
 {
     #region Health event
 
+    public static event Action<int> OnRegainHealth;
+    public static void RegainHealth(int healthRegained) => OnRegainHealth?.Invoke(healthRegained);
+
     public static event Action<float> OnUpdateHealth;
-    public static void UpdateHealth(float health)
-    {
-        OnUpdateHealth?.Invoke(health);
-    }
+    public static void UpdateHealth(float health) => OnUpdateHealth?.Invoke(health);
     #endregion
 
     #region Xp event
     public static event Action<int> OnSetXpToLevelUp;
-    public static void SetXpToLevelUp(int xpAmount)
-    {
-        OnSetXpToLevelUp?.Invoke(xpAmount);
-    }
+    public static void SetXpToLevelUp(int xpAmount) => OnSetXpToLevelUp?.Invoke(xpAmount);
 
     public static event Action<int> OnXpGain;
-    public static void XpGain (int currentXpPoint)
-    {
-        OnXpGain?.Invoke(currentXpPoint);
-    }
+    public static void XpGain(int currentXpPoint) => OnXpGain?.Invoke(currentXpPoint);
 
     public static event Action<int> OnLevelUp;
-    public static void LevelUp(int currentLevel)
-    {
-        OnLevelUp?.Invoke(currentLevel);
-    }
+    public static void LevelUp(int currentLevel) => OnLevelUp?.Invoke(currentLevel);
 
     public static event Action OnMaxlevelAttained;
-    public static void MaxlevelAttained()
-    {
-        OnMaxlevelAttained?.Invoke();
-    }
+    public static void MaxlevelAttained() => OnMaxlevelAttained?.Invoke();
     #endregion
 
     public static event Action<int, int> OnAttackLand;
-    public static void AttackLand(int objectId, int damage)
-    {
-        OnAttackLand?.Invoke(objectId, damage);
-    }
+    public static void AttackLand(int objectId, int damage) => OnAttackLand?.Invoke(objectId, damage);
 
     public static event Action<SO_Character> OnCharacterChosen;
-    public static void CharacterChosen(SO_Character characterToUse)
-    {
-        OnCharacterChosen?.Invoke(characterToUse);
-    }
+    public static void CharacterChosen(SO_Character characterToUse) => OnCharacterChosen?.Invoke(characterToUse);
 }
