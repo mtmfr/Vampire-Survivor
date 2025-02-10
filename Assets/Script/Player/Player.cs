@@ -207,7 +207,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1);
         GameStateManager.UpdateGameState(GameState.GameOver);
         sprite.color = Color.white;
-        gameObject.SetActive(false);
     }
     #endregion
 }

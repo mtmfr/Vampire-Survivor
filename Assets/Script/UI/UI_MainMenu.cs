@@ -27,7 +27,7 @@ public class UI_MainMenu : MonoBehaviour
     private bool stageSpriteLoaded = false;
     #endregion
 
-    private void Start()
+    private void OnEnable()
     {
         GoToStartMenu();
     }

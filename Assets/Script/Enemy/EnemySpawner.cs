@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -18,6 +19,9 @@ public class EnemySpawner : MonoBehaviour
         SpawnerEvent.OnSpawnPosChanged += UpdateSpawnPos;
 
         TimerEvent.OnMinutesChange += SetCurrentWave;
+
+        GameStateManager.OnGameStateChange += ControlSpawn;
+        GameStateManager.OnGameStateChange += OnGameEnd;
     }
 
     private void OnDisable()
@@ -25,6 +29,8 @@ public class EnemySpawner : MonoBehaviour
         LevelEvent.OnLevelSelected -= GetEnemyWaves;
         SpawnerEvent.OnSpawnPosChanged -= UpdateSpawnPos;
 
+        GameStateManager.OnGameStateChange -= ControlSpawn;
+        GameStateManager.OnGameStateChange -= OnGameEnd;
     }
 
     #region Wave
@@ -33,20 +39,51 @@ public class EnemySpawner : MonoBehaviour
         waves = stage.stageWaves;
     }
 
+    private void ControlSpawn(GameState gameState)
+    {
+        Debug.Log(gameObject.name);
+        if (gameState == GameState.InGame)
+            StartCoroutine(CR_Spawn());
+        else StopCoroutine(CR_Spawn());
+    }
+
     private void SetCurrentWave(int id)
     {
         enemyWavesId = id;
-        StopCoroutine(Spawn());
-
-        StartCoroutine(Spawn());
     }
     #endregion
+
+    private void OnGameEnd(GameState gameState)
+    {
+        if (gameState != GameState.GameOver)
+            return;
+
+        List<Enemy> toDispawn = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).ToList();
+
+        foreach (Enemy enemy in toDispawn)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+    }
+
+    private void SpawnEnemy()
+    {
+        if (waves.Count < enemyWavesId + 1)
+            return;
+
+        // Get the number of enemies to spawn in the current wave
+        int enemiesInWave = waves[enemyWavesId].EnemiesInWave.Count;
+
+    }
 
     /// <summary>
     /// Coroutine responsible for spawning enemies in waves
     /// </summary>
-    private IEnumerator Spawn()
+    private IEnumerator CR_Spawn()
     {
+        if (waves.Count < enemyWavesId + 1)
+            GameStateManager.UpdateGameState(GameState.GameOver);
+
         // Get the number of enemies to spawn in the current wave
         int enemiesInWave = waves[enemyWavesId].EnemiesInWave.Count;
 
@@ -58,6 +95,9 @@ public class EnemySpawner : MonoBehaviour
         {
             // Get the enemy to spawn based on the current wave's list
             Enemy enemyToSpawn = waves[enemyWavesId].EnemiesInWave[enemyId];
+
+            if (enemyToSpawn == null)
+                break;
 
             // Get the spawn position (can be a random or predefined position)
             Vector3 spawnPos = GetSpawnPosition();

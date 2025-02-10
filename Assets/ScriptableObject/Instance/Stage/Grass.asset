@@ -19,3 +19,4 @@ MonoBehaviour:
   <LightSourceSprite>k__BackingField: {fileID: -2122895304, guid: bfff88377e1b4324b9a106b32d6ff6ee, type: 3}
   stageWaves:
   - {fileID: 11400000, guid: 1b748496f4baa45428797a787d4b54f7, type: 2}
+  - {fileID: 11400000, guid: 6588aa0a69dee364f8f7c8cbb40ddf03, type: 2}

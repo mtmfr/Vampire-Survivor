@@ -24,8 +24,6 @@ public class UI_InGameUI : MonoBehaviour
         Inventory.OnGoldValueChanged += UpdateGold;
 
         TimerEvent.OnTimeChange += DisplayTime;
-
-        GameStateManager.UpdateGameState(GameState.InGame);
     }
 
     private void OnDisable()

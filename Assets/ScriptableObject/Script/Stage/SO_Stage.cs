@@ -9,6 +9,7 @@ public class SO_Stage : ScriptableObject
     [field: SerializeField] public string StageDescription { get; private set; }
     [field: SerializeField] public Sprite BgSprite { get; private set; }
 
+    [Tooltip("Duration of the level (in min)")]
     [field: SerializeField] public int Duration { get; private set; }
 
     [Header("LightSource")]

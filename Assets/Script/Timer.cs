@@ -12,8 +12,7 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (canCountTime)
-            CountTime();
+        CountTime();
     }
 
     private void OnEnable()
@@ -28,11 +27,7 @@ public class Timer : MonoBehaviour
 
     private void ControlTimer(GameState state)
     {
-        canCountTime = state switch
-        {
-            GameState.InGame => true,
-            _ => false
-        };
+        Time.timeScale = state == GameState.InGame ? 1 : 0;
     }
 
     private void CountTime()
@@ -53,6 +48,8 @@ public class Timer : MonoBehaviour
         {
             TimerEvent.MinutesChange(minutes);
             lastMinutes = minutes;
+            if (maxTime == minutes)
+                TimerEvent.TimeRanOut();
         }
     }
 }
@@ -64,4 +61,7 @@ public static class TimerEvent
 
     public static event Action<int> OnMinutesChange;
     public static void MinutesChange(int minutes) => OnMinutesChange?.Invoke(minutes);
+
+    public static event Action OnTimeRanOut;
+    public static void TimeRanOut() => OnTimeRanOut?.Invoke();
 }
