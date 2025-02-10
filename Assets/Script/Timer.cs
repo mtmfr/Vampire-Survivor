@@ -33,8 +33,6 @@ public class Timer : MonoBehaviour
             GameState.InGame => true,
             _ => false
         };
-
-        Debug.Log(canCountTime);
     }
 
     private void CountTime()
@@ -44,8 +42,6 @@ public class Timer : MonoBehaviour
         int seconds, minutes;
         seconds = Mathf.FloorToInt(timer % 60);
         minutes = Mathf.FloorToInt(timer / 60);
-
-        Debug.Log(timer);
 
         if (seconds > lastSeconds)
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,12 +13,6 @@ public class LightSource : MonoBehaviour
     private void Start()
     {
         lightSourceSprite = GetComponent<SpriteRenderer>();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            SetInactive();
     }
 
     private void OnEnable()
@@ -78,7 +71,7 @@ public class LightSource : MonoBehaviour
         PickableObject objectToDrop = rawDrop[objectToDropId];
 
         //check for active object
-        bool truc = ObjectPool.IsAnyObjectActive(objectToDrop);
+        bool truc = ObjectPool.IsAnyObjectInactive(objectToDrop);
 
         if (truc)
         {

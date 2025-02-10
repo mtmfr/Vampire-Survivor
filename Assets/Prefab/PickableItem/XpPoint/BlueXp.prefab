@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5336264592539823665}
   - component: {fileID: 4105838543053021892}
   m_Layer: 0
-  m_Name: Xp
+  m_Name: BlueXp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

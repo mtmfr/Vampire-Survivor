@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D), typeof(SpriteRenderer))]
-public class XpPoint : MonoBehaviour
+public class XpPoint : PickableObject
 {
     private Collider2D col;
     private SpriteRenderer sprite;
 
-    [SerializeField] private XpScriptableObject xpSO;
+    [SerializeField] private SO_Xp xpSO;
     LayerMask playerLayer = 1 << 3;
     LayerMask enemyLayer = 1 << 6;
 
@@ -21,13 +21,10 @@ public class XpPoint : MonoBehaviour
         sprite.sprite = xpSO.xpSprite;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void Pickup()
     {
-        if (collision.gameObject.layer != 3)
-            return;
-
         XpEvent.XpGain(xpSO.xpGiven);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
 

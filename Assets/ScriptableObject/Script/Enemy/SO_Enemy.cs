@@ -4,7 +4,7 @@ using UnityEngine;
 public class SO_Enemy: ScriptableObject
 {
     [Header("Experience")]
-    [field: SerializeField] public GameObject XpPoint { get; private set; }
+    [field: SerializeField] public XpPoint XpPoint { get; private set; }
 
     #region stats
     [Header("Stats")]

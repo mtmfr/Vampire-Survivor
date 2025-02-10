@@ -6,6 +6,9 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private List<SO_EnemyWave> waves;
 
+    private List<Vector3Int> enemySpawnPos = new();
+    [SerializeField] private float spawnOffset;
+
     private void Start()
     {
         
@@ -13,12 +16,23 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        SpawnerEvent.OnSpawnPosChanged += UpdateSpawnPos;
+    }
+
+    private void OnDisable()
+    {
         
     }
 
     private void SpawnEnemy()
     {
 
+    }
+
+    private void UpdateSpawnPos(List<Vector3Int> spawnPos)
+    {
+        enemySpawnPos.Clear();
+        enemySpawnPos = spawnPos;
     }
 }
 
@@ -34,5 +48,11 @@ public static class SpawnerEvent
     public static void BecomeInactive(GameObject gameObject)
     {
         OnBecomeInactive?.Invoke(gameObject);
+    }
+
+    public static event Action<List<Vector3Int>> OnSpawnPosChanged;
+    public static void SpawnPosChanged(List<Vector3Int> pos)
+    {
+        OnSpawnPosChanged?.Invoke(pos);
     }
 }

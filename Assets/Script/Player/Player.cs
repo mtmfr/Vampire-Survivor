@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     #region Stats
     [Header("Player Stats")]
-    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private SO_PlayerStats playerStats;
 
     private int maxHp;
     private int hp;

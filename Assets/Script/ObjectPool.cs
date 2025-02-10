@@ -5,32 +5,24 @@ using UnityEngine;
 
 public static class ObjectPool
 {
-    public static bool IsAnyObjectActive<T>(T objectToCheck) where T : MonoBehaviour
+    public static bool IsAnyObjectInactive<T>(T objectToCheck) where T : MonoBehaviour
     {
-        // Retrieve all objects of type T (including inactive objects)
-        List<T> Tobjects = GameObject.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
-
         // Get the type of the object to check in advance to avoid calling GetType() on each iteration
         Type targetType = objectToCheck.GetType();
 
-        Debug.Log(targetType);
-
-        foreach (T Tobject in Tobjects)
+        // Retrieve all objects of type T (including inactive objects)
+        List<T> Tobjects = GameObject.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(T =>
         {
-            // If the types do not match, skip this object
-            if (Tobject.GetType() != targetType)
-                continue;
+            //check the type of the current object
+            bool hasRightType = T.GetType() == targetType;
 
-            // If the object is active in the hierarchy, skip it
-            if (Tobject.gameObject.activeInHierarchy)
-                continue;
+            //check if the current check object is inactive
+            bool isActive = T.gameObject.activeInHierarchy;
 
-            // If the object is inactive, return true
-            return true;
-        }
+            return hasRightType && !isActive;
+        }).ToList();
 
-        // If no matching inactive object is found, return false
-        return false;
+        return Tobjects.Count != 0;
     }
 
     public static T GetInactiveObject<T>(T objectToGet) where T : MonoBehaviour
@@ -42,10 +34,6 @@ public static class ObjectPool
 
             return type;
         }).ToList();
-
-        // If no objects found, return null
-        if (values.Count == 0)
-            return null;
 
         // Find the first inactive object (inactive objects won't be active in the hierarchy)
         T inactiveObject = values.FirstOrDefault(chose => !chose.gameObject.activeInHierarchy);

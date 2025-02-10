@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon : Equipement
+public abstract class Weapon : SO_Equipement
 {
     [Header("Weapon")]
     [SerializeField] protected GameObject weaponOriginal;

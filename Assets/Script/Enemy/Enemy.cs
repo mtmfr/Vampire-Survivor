@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour
 
     private Transform playerTransform;
 
-    private GameObject xp;
+    private XpPoint xp;
 
     [SerializeField] protected SO_Enemy enemySO;
 
@@ -158,7 +158,14 @@ public abstract class Enemy : MonoBehaviour
 
     private void Death()
     {
-        Instantiate(xp, transform.position, Quaternion.identity);
+        if (ObjectPool.IsAnyObjectInactive(xp))
+        {
+            GameObject xpToSpawn = ObjectPool.GetInactiveObject(xp).gameObject;
+            xpToSpawn.transform.position = transform.position;
+            xpToSpawn.SetActive(true);
+        }
+        else Instantiate(xp.gameObject, transform.position, Quaternion.identity);
+
         SpawnerEvent.BecomeInactive(gameObject);
         gameObject.SetActive(false);
     }
