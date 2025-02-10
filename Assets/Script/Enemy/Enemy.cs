@@ -101,27 +101,20 @@ public abstract class Enemy : MonoBehaviour
     #region Attack
     private void StartAttacking()
     {
-        if (attackRoutine != null)
-            return;
-
-        attackRoutine = AttackRoutine();
-        StartCoroutine(attackRoutine);
+        StartCoroutine(AttackRoutine());
     }
     private void StopAttacking()
     {
-        if (attackRoutine == null)
-            return;
-
-        StopCoroutine(attackRoutine);
-        attackRoutine = null;
+        StopCoroutine(AttackRoutine());
     }
 
     private IEnumerator AttackRoutine()
     {
-        EnemyEvent.PlayerReached(attack);
-        yield return new WaitForSeconds(1 / attackSpeed);
-        attackRoutine = null;
-        StartAttacking();
+        while (true)
+        {
+            EnemyEvent.PlayerReached(attack);
+            yield return new WaitForSeconds(1 / attackSpeed);
+        }
     }
     #endregion
 
@@ -172,13 +165,13 @@ public abstract class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == playerLayer)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
             StartAttacking();
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == playerLayer)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
             StopAttacking();
     }
 }

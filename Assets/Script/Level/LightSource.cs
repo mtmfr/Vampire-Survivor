@@ -42,49 +42,53 @@ public class LightSource : MonoBehaviour
             SetInactive();
     }
 
+    /// <summary>
+    /// This function handles setting the light source object to inactive and dropping a pickable item from it.
+    /// </summary>
     private void SetInactive()
     {
-        //Check if there are any Pickable object to be drop
+        // Check if there are any pickable objects to drop from the light source.
         if (droppedItems.Count == 0)
             Debug.LogError("No item can be dropped from lightSource");
 
-        //Create a new List that contains each droppable object once * it's weight
+        // Create a new list that contains each droppable object repeated by its weight.
         List<PickableObject> rawDrop = new();
-        foreach(PickableObject drop in droppedItems)
+        foreach (PickableObject drop in droppedItems)
         {
-
-            for(int objectToAdd = 0; objectToAdd < drop.Weight; objectToAdd++)
+            // For each droppable object, repeat it based on its weight.
+            for (int objectToAdd = 0; objectToAdd < drop.Weight; objectToAdd++)
             {
-                //Add each object for it's weight in rawDrop
+                // Add the object to the rawDrop list based on its weight.
                 rawDrop.Add(drop);
             }
         }
 
-        //Check if rawdrop is null
+        // Check if no objects were added to rawDrop.
         if (rawDrop.Count == 0)
             Debug.LogError("No object can be dropped from light source");
 
-        //Get a random id
+        // Get a random index from the rawDrop list to determine which object to drop.
         int objectToDropId = UnityEngine.Random.Range(0, rawDrop.Count - 1);
 
-        //Get the pickable object at rawDrop placement
+        // Get the pickable object to drop based on the randomly chosen index.
         PickableObject objectToDrop = rawDrop[objectToDropId];
 
-        //check for active object
-        bool truc = ObjectPool.IsAnyObjectInactive(objectToDrop);
-
-        if (truc)
+        // Check if there is an inactive object available in the object pool.
+        if (ObjectPool.IsAnyObjectInactive(objectToDrop))
         {
+            // If an inactive object is available, get it from the object pool and activate it at the current position.
             GameObject objectToActivate = ObjectPool.GetInactiveObject(objectToDrop).gameObject;
             objectToActivate.transform.position = transform.position;
             objectToActivate.SetActive(true);
         }
         else
         {
+            // If no inactive object is available, instantiate a new object at the current position.
             GameObject objectToActivate = objectToDrop.gameObject;
             Instantiate(objectToActivate, transform.position, Quaternion.identity);
         }
 
+        // Set the current game object (light source) to inactive after the object drop.
         gameObject.SetActive(false);
     }
 }

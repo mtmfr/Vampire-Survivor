@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <XpPoint>k__BackingField: {fileID: 4105838543053021892, guid: 0ade3de441f704047b6525223bc9049f, type: 3}
   <Health>k__BackingField: 10
-  <Attack>k__BackingField: 1
-  <Speed>k__BackingField: 4
+  <Attack>k__BackingField: 0
+  <Speed>k__BackingField: 1
   <AttackSpeed>k__BackingField: 0.7
   <KnockBack>k__BackingField: 4
   <sprite>k__BackingField: {fileID: 21300000, guid: 5162a2ebb7c622a4bb86a2d70093aa20, type: 3}

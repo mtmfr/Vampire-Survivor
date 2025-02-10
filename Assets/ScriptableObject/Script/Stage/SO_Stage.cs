@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CurrentLevel", menuName = "Scriptable Objects/CurrentLevel")]
@@ -12,6 +13,9 @@ public class SO_Stage : ScriptableObject
 
     [Header("LightSource")]
     [field: SerializeField] public Sprite LightSourceSprite { get; private set; }
+
+    [Header("Waves")]
+    [field: SerializeField] public List<SO_EnemyWave> stageWaves = new(30);
 
     private void OnValidate()
     {

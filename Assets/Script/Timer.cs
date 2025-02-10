@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour
     private float timer;
     public static int maxTime;
 
-    private int lastSeconds, lastMinutes = 0;
+    private int lastSeconds, lastMinutes = -1;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -26,9 +26,9 @@ public class Timer : MonoBehaviour
         GameStateManager.OnGameStateChange -= ControlTimer;
     }
 
-    private void ControlTimer(GameState State)
+    private void ControlTimer(GameState state)
     {
-        canCountTime = State switch
+        canCountTime = state switch
         {
             GameState.InGame => true,
             _ => false
