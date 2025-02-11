@@ -7,6 +7,7 @@ public class Experience : MonoBehaviour
     [SerializeField] private int maxLevel;
     private int xpToLevelUp;
     private int currentXp;
+    private AudioSource levelUpSfx;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -14,6 +15,8 @@ public class Experience : MonoBehaviour
         currentLevel = 1;
 
         currentXp = 0;
+
+        levelUpSfx = GetComponent<AudioSource>();
 
         PlayerEvent.SetXpToLevelUp(UpdateXpRequirement());
         PlayerEvent.XpGain(currentXp);
@@ -47,6 +50,7 @@ public class Experience : MonoBehaviour
         {
             currentXp = currentXp + xpGained - xpToLevelUp;
             PlayerEvent.XpGain(currentXp);
+            levelUpSfx.Play();
             LevelUp();
         }
     }

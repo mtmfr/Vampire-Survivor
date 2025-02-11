@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UI_MainMenu : MonoBehaviour
 {
+    private AudioSource music;
+
     #region main menu screen
     [SerializeField] private GameObject startMenuScreen;
     [SerializeField] private GameObject characterSelectScreen;
@@ -27,9 +29,18 @@ public class UI_MainMenu : MonoBehaviour
     private bool stageSpriteLoaded = false;
     #endregion
 
+    private void Awake()
+    {
+        music = GetComponent<AudioSource>();
+    }
     private void OnEnable()
     {
         GoToStartMenu();
+        music.Play();
+    }
+    private void OnDisable()
+    {
+        music.Stop();
     }
 
     #region navigation

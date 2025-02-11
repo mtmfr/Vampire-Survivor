@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4200663606962751402}
   - component: {fileID: 869447270589772452}
   - component: {fileID: 8104280184810626902}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RoastedChicken
   m_TagString: Untagged
   m_Icon: {fileID: 0}

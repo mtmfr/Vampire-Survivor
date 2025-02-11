@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private Animator anim;
+    private AudioSource damageFx;
     #endregion
 
     #region ChildrenComponent
@@ -44,6 +45,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        damageFx = GetComponent<AudioSource>();
+
 
         maxHp = playerStats.Health;
         speed = playerStats.Speed;
@@ -172,6 +175,7 @@ public class Player : MonoBehaviour
     /// <param name="damage">The amount of health removed</param>
     private void TakeDamage(int damage)
     {
+        damageFx.Play();
         if (hp - damage > 0)
             hp -= damage;
         else

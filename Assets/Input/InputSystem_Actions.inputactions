@@ -7,9 +7,9 @@
             "actions": [
                 {
                     "name": "Move",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "351f2ccd-1f9f-44bf-9bec-d62ac5c5f408",
-                    "expectedControlType": "Digital",
+                    "expectedControlType": "Stick",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -17,9 +17,9 @@
             ],
             "bindings": [
                 {
-                    "name": "One Modifier",
-                    "id": "0c970ff4-85ff-4779-a243-c7b1aee4d9a3",
-                    "path": "OneModifier",
+                    "name": "2D Vector",
+                    "id": "96752949-05b3-4233-bc58-910193615f44",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -28,53 +28,42 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "modifier",
-                    "id": "e64274be-fe4a-46fe-ad76-8f545c7bcb64",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "94cf8948-e2b1-4623-801c-29fdfa490943",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "One Modifier",
-                    "id": "6d822793-59e6-4410-9168-519226db6a3c",
-                    "path": "OneModifier",
+                    "name": "up",
+                    "id": "ce92219f-02ba-4e0f-8a5f-0a7bf125d81e",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "Modifier",
-                    "id": "9c2df59a-ba75-4d51-b41f-99a6f1e53e6d",
-                    "path": "<Touchscreen>/Press",
+                    "name": "down",
+                    "id": "726ec5b1-c159-4ac2-b5c1-eb16c5e15bfa",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Touch",
+                    "groups": "",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Binding",
-                    "id": "0db920e5-9139-4eea-ba8a-584e6029ada6",
-                    "path": "<Touchscreen>/position",
+                    "name": "left",
+                    "id": "91b0d51e-6ee9-49b6-9e68-a6232bbf939d",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "a7353679-5e33-41c4-aaef-727572dc6b69",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -7,6 +7,7 @@ public abstract class Enemy : MonoBehaviour
 {
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
+    private AudioSource damageFx;
 
     private Transform playerTransform;
 
@@ -30,6 +31,8 @@ public abstract class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        damageFx = GetComponent<AudioSource>();
+
         sprite.sprite = enemySO.sprite;
         sprite.color = baseColor;
 
@@ -119,6 +122,8 @@ public abstract class Enemy : MonoBehaviour
     {
         if (Id != gameObject.GetInstanceID())
             return;
+
+        damageFx.Play();
 
         StartCoroutine(HittenColorChange());
 

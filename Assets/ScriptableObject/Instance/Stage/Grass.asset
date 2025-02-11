@@ -20,3 +20,7 @@ MonoBehaviour:
   stageWaves:
   - {fileID: 11400000, guid: 1b748496f4baa45428797a787d4b54f7, type: 2}
   - {fileID: 11400000, guid: 6588aa0a69dee364f8f7c8cbb40ddf03, type: 2}
+  - {fileID: 11400000, guid: a27e29ecb8156454e94666f4625b1029, type: 2}
+  - {fileID: 11400000, guid: a7b1e2649b018ff4fbcc6aa11cf8a721, type: 2}
+  - {fileID: 11400000, guid: 9a0565222222ec644b38b06c68aed997, type: 2}
+  - {fileID: 11400000, guid: 252f00d749cc2084fb52f71d02ccdc6d, type: 2}

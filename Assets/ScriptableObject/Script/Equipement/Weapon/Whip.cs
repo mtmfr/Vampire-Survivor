@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Weapon/Whip", menuName = "Scriptable Objects/Equipement/Weapon/Whip")]
@@ -70,13 +71,26 @@ public class Whip : Weapon
 
     protected override IEnumerator AttackRoutine()
     {
+        SpriteRenderer playerSprite = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+
         while (true)
         {
             for (int nbOfAttack = 0; nbOfAttack < projectileAmount; nbOfAttack++)
             {
-                if (nbOfAttack % 2 != 0)
-                    LeftAttack();
-                else RightAttack();
+                if (playerSprite.flipX == false)
+                {
+                    if (nbOfAttack % 2 != 0)
+                        LeftAttack();
+                    else RightAttack();
+                }
+                else
+                {
+                    if (nbOfAttack % 2 != 0)
+                        RightAttack();
+                    else LeftAttack();
+                }
+
+                
                 yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(cooldown);

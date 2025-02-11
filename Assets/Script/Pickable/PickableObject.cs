@@ -8,16 +8,29 @@ public abstract class PickableObject : MonoBehaviour
     [field: SerializeField] public int Weight { get; private set; }
 
     private Rigidbody2D rb;
+    protected SpriteRenderer sprite;
 
-    private void Start()
+    protected AudioSource sfx;
+
+
+    private void Awake()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+
+    }
+
+    protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
+
+        sfx = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
     {
         GameStateManager.OnGameStateChange += OnGameEnd;
+        sprite.enabled = true;
     }
 
     private void OnDisable()

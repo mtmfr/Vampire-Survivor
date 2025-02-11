@@ -7,7 +7,8 @@ public class Timer : MonoBehaviour
     private float timer;
     public static int maxTime;
 
-    private int lastSeconds, lastMinutes = -1;
+    private int minutes;
+    private int lastMinutes = -1;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -34,23 +35,16 @@ public class Timer : MonoBehaviour
     {
         timer += Time.fixedDeltaTime;
 
-        int seconds, minutes;
+        int seconds;
         seconds = Mathf.FloorToInt(timer % 60);
         minutes = Mathf.FloorToInt(timer / 60);
-
-        if (seconds > lastSeconds)
-        {
-            TimerEvent.TimeChange(minutes, seconds);
-            lastSeconds = seconds;
-        }
-
+        
         if (minutes > lastMinutes)
         {
             TimerEvent.MinutesChange(minutes);
-            lastMinutes = minutes;
-            if (maxTime == minutes)
-                TimerEvent.TimeRanOut();
+            lastMinutes++;
         }
+        TimerEvent.TimeChange(minutes, seconds);
     }
 }
 

@@ -247,9 +247,9 @@ public class LevelGenerator : MonoBehaviour
     #region LightSource
     private bool ShouldSpawnLightSource()
     {
-        float shouldSpawn = Mathf.Round(UnityEngine.Random.value) * 100;
+        float shouldSpawn = UnityEngine.Random.value * 100;
 
-        return shouldSpawn <= lightsourceSpawnChance;
+        return shouldSpawn < lightsourceSpawnChance;
     }
 
     /// <summary>

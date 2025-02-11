@@ -49,6 +49,9 @@ public class EnemySpawner : MonoBehaviour
     private void SetCurrentWave(int id)
     {
         enemyWavesId = id;
+
+        if (id != 0)
+            StartCoroutine(CR_Spawn());
     }
     #endregion
 

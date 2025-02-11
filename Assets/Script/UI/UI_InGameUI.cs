@@ -12,7 +12,12 @@ public class UI_InGameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentLevel;
     [SerializeField] private GameObject maxLevel;
 
+    private AudioSource music;
 
+    private void Awake()
+    {
+        music = GetComponent<AudioSource>();
+    }
     private void OnEnable()
     {
         PlayerEvent.OnSetXpToLevelUp += SetPlayerXpBar;
@@ -24,6 +29,7 @@ public class UI_InGameUI : MonoBehaviour
         Inventory.OnGoldValueChanged += UpdateGold;
 
         TimerEvent.OnTimeChange += DisplayTime;
+        music.Play();
     }
 
     private void OnDisable()
@@ -37,6 +43,7 @@ public class UI_InGameUI : MonoBehaviour
         Inventory.OnGoldValueChanged -= UpdateGold;
 
         TimerEvent.OnTimeChange -= DisplayTime;
+        music.Stop();
     }
 
     #region Xp

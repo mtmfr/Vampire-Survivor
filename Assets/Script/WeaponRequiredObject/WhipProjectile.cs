@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,7 +32,6 @@ public class WhipProjectile : MonoBehaviour
             whipFx = GetComponent<ParticleSystem>();
 
         //Attack
-        whipFx.Emit(1);
         attackCollision = Physics2D.OverlapBoxAll(transform.position, attackHitbox, 0, attackLayer)
                                .ToList();
 
@@ -44,6 +44,13 @@ public class WhipProjectile : MonoBehaviour
             PlayerEvent.AttackLand(enemy.gameObject.GetInstanceID(), damageToDeal);
         }
 
+        StartCoroutine(AttackFx());
+    }
+
+    IEnumerator AttackFx()
+    {
+        whipFx.Emit(1);
+        yield return new WaitForSeconds(whipFx.main.duration);
         gameObject.SetActive(false);
     }
 }

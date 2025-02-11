@@ -50,10 +50,6 @@ public class InputManager : MonoBehaviour
     private void Move(InputAction.CallbackContext context)
     {
         movementDir = context.ReadValue<Vector2>();
-        float movementDirX = movementDir.x - Screen.width / 2;
-        float movementDirY = movementDir.y - Screen.height / 2;
-
-        movementDir = new Vector2(movementDirX, movementDirY);
     }
 
     private void StopMoving(InputAction.CallbackContext context)

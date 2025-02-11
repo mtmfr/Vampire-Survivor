@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4068176941110922055}
   - component: {fileID: 881140035992087588}
   - component: {fileID: 3081005060271102955}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite-Gold_Coin_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
