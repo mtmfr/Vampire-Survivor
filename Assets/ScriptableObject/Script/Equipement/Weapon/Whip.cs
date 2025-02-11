@@ -1,31 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Weapon/Whip", menuName = "Scriptable Objects/Equipement/Weapon/Whip")]
 public class Whip : Weapon
 {
     [Header("Weapon")]
-    [Tooltip("The visual effect of the whip")]
-    private ParticleSystem whipFx;
 
     [Tooltip("Lenght and height of the whip attack hitbox")]
     [SerializeField] private Vector2 attackHitbox;
 
-    private bool isWeaponSpawned = false;
+    private WhipProjectile whipProjectile { get => weaponOriginal.GetComponent<WhipProjectile>(); }
 
-    public override void CreateNewProjectile()
-    {
-        if (isWeaponSpawned == true)
-            return;
-
-        GameObject whip = Instantiate(weaponOriginal, Player.playerRb.transform);
-        
-        if (whip != null)
-            whipFx = whip.GetComponent<ParticleSystem>();
-        isWeaponSpawned = false;
-    }
+    public override void CreateNewProjectile() {}
 
     /// <summary>
     /// Level up the weapon
@@ -70,13 +56,16 @@ public class Whip : Weapon
     #region Attack controller
     public override void StartAttack(MonoBehaviour player)
     {
-        CreateNewProjectile();
         player.StartCoroutine(AttackRoutine());
     }
 
     public override void StopAttack(MonoBehaviour player)
     {
         player.StopCoroutine(AttackRoutine());
+        foreach(WhipProjectile whip in ObjectPool.GetActiveObjects<WhipProjectile>())
+        {
+            whip.gameObject.SetActive(false);
+        }
     }
 
     protected override IEnumerator AttackRoutine()
@@ -85,40 +74,13 @@ public class Whip : Weapon
         {
             for (int nbOfAttack = 0; nbOfAttack < projectileAmount; nbOfAttack++)
             {
-                if (IsFirstAttackLeft())
-                {
-                    if (nbOfAttack % 2 != 0)
-                        RightAttack();
-                    else LeftAttack();
-                    yield return new WaitForSeconds(whipFx.main.duration);
-                }
-                else
-                {
-                    if (nbOfAttack % 2 != 0)
-                        LeftAttack();
-                    else RightAttack();
-                    yield return new WaitForSeconds(whipFx.main.duration);
-                }
+                if (nbOfAttack % 2 != 0)
+                    LeftAttack();
+                else RightAttack();
+                yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(cooldown);
         }
-    }
-
-    private bool isLastAttackLeft = false;
-    private bool IsFirstAttackLeft()
-    {
-        if (Player.playerRb.linearVelocityX < 0)
-        {
-            isLastAttackLeft = true;
-            return isLastAttackLeft;
-        }
-        else if (Player.playerRb.linearVelocityX > 0)
-        {
-            isLastAttackLeft = false;
-            return isLastAttackLeft;
-        }
-
-        return isLastAttackLeft;
     }
     #endregion
 
@@ -128,30 +90,25 @@ public class Whip : Weapon
     /// </summary>
     private void LeftAttack()
     {
-        //Create the collider list of hit object
-        List<Collider2D> leftAttackCollision;
-
         //Set the transform of the whip
         Vector2 LeftWhipPos = Player.playerRb.position - Vector2.right * offsetFromPlayer;
+        Vector3 scale = Vector3.one;
 
-        DrawAttackHitbox(LeftWhipPos);
-
-        whipFx.transform.position = LeftWhipPos;
-        whipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
-        whipFx.transform.localScale = Vector3.one;
-
-        //Attack
-        whipFx.Emit(1);
-        leftAttackCollision = Physics2D.OverlapBoxAll(LeftWhipPos, attackHitbox, 0, attackLayer)
-                              .ToList();
-
-        //Get all the collider in the object in the collider 
-        foreach (Collider2D enemy in leftAttackCollision)
+        if (ObjectPool.IsAnyObjectInactive(whipProjectile))
         {
-            if (enemy == null)
-                continue;
+            WhipProjectile whip = ObjectPool.GetInactiveObject(whipProjectile);
 
-            PlayerEvent.AttackLand(enemy.gameObject.GetInstanceID(), attack);
+            DrawAttackHitbox(LeftWhipPos);
+
+            whip.SetWhip(LeftWhipPos, scale, attackHitbox);
+            whip.gameObject.SetActive(true);
+            whip.Attack(attack);
+        }
+        else
+        {
+            GameObject whip = Instantiate(whipProjectile.gameObject, LeftWhipPos, Quaternion.identity);
+            whip.transform.localScale = scale;
+            whip.GetComponent<WhipProjectile>().Attack(attack);
         }
     }
 
@@ -160,37 +117,30 @@ public class Whip : Weapon
     /// </summary>
     private void RightAttack()
     {
-        //Create the collider list of hit object
-        List<Collider2D> rightAttackCollision;
-
-        //Set the transform of the whip
         Vector2 RightWhipPos = Player.playerRb.position + Vector2.right * offsetFromPlayer;
+        Vector3 scale = new Vector3(-1, -1, 1);
 
-        DrawAttackHitbox(RightWhipPos);
-
-        whipFx.transform.position = RightWhipPos;
-        whipFx.transform.rotation = Quaternion.Euler(Vector3.zero);
-        whipFx.transform.localScale = new Vector3(-1, -1, 1);
-
-        //Attack
-        whipFx.Emit(1);
-        rightAttackCollision = Physics2D.OverlapBoxAll(RightWhipPos, attackHitbox, 0, attackLayer)
-                               .ToList();
-
-        //Get all the collider in the object in the collider 
-        foreach (Collider2D enemy in rightAttackCollision)
+        if (ObjectPool.IsAnyObjectInactive(whipProjectile))
         {
-            if (enemy == null)
-                continue;
+            var whip = ObjectPool.GetInactiveObject(whipProjectile);
+            
+            DrawAttackHitbox(RightWhipPos);
 
-            PlayerEvent.AttackLand(enemy.gameObject.GetInstanceID(), attack);
+            whip.SetWhip(RightWhipPos, scale, attackHitbox);
+            whip.gameObject.SetActive(true);
+            whip.Attack(attack);
+        }
+        else
+        {
+            GameObject whip = Instantiate(whipProjectile.gameObject, RightWhipPos, Quaternion.identity);
+            whip.transform.localScale = scale;
         }
     }
     #endregion
 
     private void DrawAttackHitbox(Vector2 attPos)
     {
-        float duration = whipFx.main.duration;
+        float duration = 0.1f;
         var UL = attPos + Vector2.up * (attackHitbox.y / 2) + Vector2.left * (attackHitbox.x / 2);
         var UR = attPos + Vector2.up * (attackHitbox.y / 2) + Vector2.right * (attackHitbox.x / 2);
 

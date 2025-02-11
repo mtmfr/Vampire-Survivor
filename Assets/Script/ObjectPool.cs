@@ -5,6 +5,12 @@ using UnityEngine;
 
 public static class ObjectPool
 {
+    /// <summary>
+    /// Check if there are any inactive gameObject with the same type as the one in the argument
+    /// </summary>
+    /// <typeparam name="T">an object that inherit from the MonoBehaviour class</typeparam>
+    /// <param name="objectToCheck">the objcet to get the type from</param>
+    /// <returns>true if there are any inactive gameObject of the type</returns>
     public static bool IsAnyObjectInactive<T>(T objectToCheck) where T : MonoBehaviour
     {
         // Get the type of the object to check in advance to avoid calling GetType() on each iteration
@@ -40,5 +46,12 @@ public static class ObjectPool
 
         // Return the first inactive object found, or null if none found
         return inactiveObject;
+    }
+
+    public static List<T> GetActiveObjects<T>() where T : MonoBehaviour
+    {
+        List<T> values = GameObject.FindObjectsByType<T>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+
+        return values;
     }
 }

@@ -2341,7 +2341,7 @@ MonoBehaviour:
   currentLevel: {fileID: 0}
   stageBg: {fileID: 5505274397315154127, guid: 2b87d191911e9254082fb654618735ad, type: 3}
   lightSource: {fileID: 2773497805920049817, guid: 989163eb093942542800bb8595d53371, type: 3}
-  lightsourceSpawnChance: 50
+  lightsourceSpawnChance: 25
 --- !u!4 &843101091
 Transform:
   m_ObjectHideFlags: 0

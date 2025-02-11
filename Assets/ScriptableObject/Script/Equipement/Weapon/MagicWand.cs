@@ -8,6 +8,8 @@ public class MagicWand : Weapon
 {
     [SerializeField, Min(1)] private int nbPierceableEnemy;
 
+    private MagicWandProjectile projectile { get => weaponOriginal.GetComponent<MagicWandProjectile>(); }
+
     public override void CreateNewProjectile() { }
 
     public override void LevelUp()
@@ -45,12 +47,15 @@ public class MagicWand : Weapon
 
     public override void StopAttack(MonoBehaviour player)
     {
-        player.StartCoroutine(AttackRoutine());
+        player.StopCoroutine(AttackRoutine());
+        foreach (MagicWandProjectile projectile in ObjectPool.GetActiveObjects<MagicWandProjectile>())
+        {
+            projectile.gameObject.SetActive(false);
+        }
     }
 
     protected override IEnumerator AttackRoutine()
     {
-        MagicWandProjectile projectile = weaponOriginal.GetComponent<MagicWandProjectile>();
         while (true)
         {
             GameObject closestEnemy = FindClosestEnemy();
