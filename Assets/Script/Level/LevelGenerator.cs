@@ -20,59 +20,66 @@ public class LevelGenerator : MonoBehaviour
     [Tooltip("The chance of spawning lightSources (in %)")]
     [SerializeField, Range(0, 100)] private int lightsourceSpawnChance;
 
+    private bool hasTileBeenSpawned = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerTransform = GameObject.FindWithTag("Player").transform;
-    }
-
-    private void OnEnable()
-    {
-        LevelEvent.OnLevelSelected += UpdateCurrentLevel;
-        LevelEvent.OnLevelSpawn += SpawnLevelTiles;
-        LevelEvent.OnLevelSpawn += SetLevelTimer;
-
-        LevelTile.OnPlayerLeft += MoveTiles;
-    }
-
-    private void OnDisable()
-    {
-        LevelEvent.OnLevelSelected -= UpdateCurrentLevel;
-        LevelEvent.OnLevelSpawn -= SpawnLevelTiles;
-        LevelEvent.OnLevelSpawn -= SetLevelTimer;
-
-        LevelTile.OnPlayerLeft -= MoveTiles;
-    }
-
-    private void UpdateCurrentLevel(SO_Stage currentLevel)
-    {
-        this.currentLevel = currentLevel;
-    }
-
-    private void SetLevelTimer()
-    {
-        Timer.maxTime = currentLevel.Duration;
-    }
-
-    #region level Tiles
-    /// <summary>
-    /// This function is responsible for spawning and positioning the level tiles (background) in the game.
-    /// </summary>
-    private void SpawnLevelTiles()
-    {
-        // Set the current stage's background sprite to the sprite defined for the current level.
-        stageBg.GetComponent<SpriteRenderer>().sprite = currentLevel.BgSprite;
 
         // Instantiate the background tiles and add them to the Tiles list.
         for (int tile = 0; tile < Tiles.Capacity; tile++)
         {
             Tiles.Add(Instantiate(stageBg));
         }
+    }
+
+    private void OnEnable()
+    {
+        LevelEvent.OnLevelSelected += UpdateCurrentLevel;
+
+        LevelTile.OnPlayerLeft += MoveTiles;
+
+        GameStateManager.OnGameStateChange += DeactivateLightSource;
+    }
+
+    private void OnDisable()
+    {
+        LevelEvent.OnLevelSelected -= UpdateCurrentLevel;
+
+        LevelTile.OnPlayerLeft -= MoveTiles;
+
+        GameStateManager.OnGameStateChange -= DeactivateLightSource;
+    }
+
+    private void UpdateCurrentLevel(SO_Stage currentLevel)
+    {
+        this.currentLevel = currentLevel;
+        Timer.maxTime = currentLevel.Duration;
 
         // If no tiles have been instantiated, log an exception.
         if (Tiles.Count == 0)
             Debug.LogException(new ArgumentNullException("bgPlacement", "No background have been found"), this);
 
+        foreach (GameObject tile in Tiles)
+        {
+            tile.GetComponent<SpriteRenderer>().sprite =  currentLevel.BgSprite;
+        }
+
+        if (hasTileBeenSpawned == false)
+        {
+            SpawnLevelTiles();
+            hasTileBeenSpawned = true;
+        }
+    }
+
+    #region level Tiles
+
+    /// <summary>
+    /// This function is responsible for spawning and positioning the level tiles (background) in the game.
+    /// </summary>
+    private void SpawnLevelTiles()
+    {
         // Get the size of the background sprite to help with tile positioning.
         Vector3 spriteSize = currentLevel.BgSprite.bounds.size;
 
@@ -86,10 +93,10 @@ public class LevelGenerator : MonoBehaviour
         // Loop through all the tiles and position them based on their index.
         for (int Id = 0; Id < Tiles.Count; Id++)
         {
-            GameObject bg = Tiles[Id];
+            GameObject tile = Tiles[Id];
 
             // Set the name of the tile (background) for identification.
-            bg.name = $"BackGround nb {Id + 1}";
+            tile.name = $"BackGround nb {Id + 1}";
 
             if (Id < 7)
             {
@@ -97,7 +104,7 @@ public class LevelGenerator : MonoBehaviour
                 yOffset = 2;
                 offset.Set(playerTransform.position.x + spriteSize.x * xOffset, playerTransform.position.y + spriteSize.y * yOffset, 0);
 
-                bg.transform.position = offset;
+                tile.transform.position = offset;
             }
             else if (Id < 14)
             {
@@ -105,7 +112,7 @@ public class LevelGenerator : MonoBehaviour
                 yOffset = 1;
                 offset.Set(playerTransform.position.x + spriteSize.x * xOffset, playerTransform.position.y + spriteSize.y, 0);
 
-                bg.transform.position = offset;
+                tile.transform.position = offset;
             }
             else if (Id < 21)
             {
@@ -113,11 +120,11 @@ public class LevelGenerator : MonoBehaviour
                 yOffset = 0;
                 offset.Set(playerTransform.position.x + spriteSize.x * xOffset, playerTransform.position.y, 0);
 
-                bg.transform.position = offset;
+                tile.transform.position = offset;
 
                 // If it's the middle tile (xOffset == 0), set it as the trigger tile.
                 if (xOffset == 0)
-                    triggerTile = bg;
+                    triggerTile = tile;
             }
             else if (Id < 28)
             {
@@ -125,7 +132,7 @@ public class LevelGenerator : MonoBehaviour
                 yOffset = -1;
                 offset.Set(playerTransform.position.x + spriteSize.x * xOffset, playerTransform.position.y - spriteSize.y, 0);
 
-                bg.transform.position = offset;
+                tile.transform.position = offset;
             }
             else
             {
@@ -133,11 +140,11 @@ public class LevelGenerator : MonoBehaviour
                 yOffset = -2;
                 offset.Set(playerTransform.position.x + spriteSize.x * xOffset, playerTransform.position.y - spriteSize.y * 2, 0);
 
-                bg.transform.position = offset;
+                tile.transform.position = offset;
             }
 
             // Call the method to adjust additional settings for each spawned tile.
-            GetSpawnTile(bg, xOffset, yOffset);
+            GetSpawnTile(tile, xOffset, yOffset);
 
             // Increment the xOffset for the next tile.
             xOffset++;
@@ -291,6 +298,19 @@ public class LevelGenerator : MonoBehaviour
             lightSources.Add(spawnedLightSource);
         }
     }   
+
+    private void DeactivateLightSource(GameState gameState)
+    {
+        if (gameState != GameState.GameOver)
+            return;
+
+        List<LightSource> lightSources = FindObjectsByType<LightSource>(FindObjectsSortMode.None).ToList();
+
+        foreach(LightSource lightSource in lightSources)
+        {
+            lightSource.gameObject.SetActive(false);
+        }
+    }
     #endregion
 
     #region Spawn position

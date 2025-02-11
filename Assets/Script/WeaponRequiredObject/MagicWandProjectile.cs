@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
@@ -72,6 +71,7 @@ public class MagicWandProjectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         if (collision.gameObject != lastEnemyHitten)
         {
             PlayerEvent.AttackLand(collision.gameObject.GetInstanceID(), damage);

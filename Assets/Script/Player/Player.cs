@@ -45,16 +45,13 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        PlayerEvent.UpdateHealth((float)hp / maxHp);
+        maxHp = playerStats.Health;
+        speed = playerStats.Speed;
     }
 
     private void OnEnable()
     {
         transform.position = startingPos;
-
-        maxHp = playerStats.Health;
-        hp = maxHp;
-        speed = playerStats.Speed;
 
         PlayerEvent.OnCharacterChosen += UpdateCurrentCharacter;
         PlayerEvent.OnRegainHealth += RegainHealth;
@@ -95,8 +92,12 @@ public class Player : MonoBehaviour
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
 
         Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
-        Inventory.Weapons.Add(startWeapon);
+        Inventory.NewWeaponGot(startWeapon);
+
+        hp = maxHp;
+        PlayerEvent.UpdateHealth((float)hp / maxHp);
     }
+
 
     #region movement
     /// <summary>
@@ -139,20 +140,19 @@ public class Player : MonoBehaviour
     #region Attack
     private void Attack(GameState state)
     {
-        switch (state)
+        if (state != GameState.InGame)
         {
-            case GameState.InGame:
-                foreach (Weapon weapon in Inventory.Weapons)
-                {
-                    weapon.StartAttack(this);
-                }
-                break;
-            case GameState.Pause:
-                foreach (Weapon weapon in Inventory.Weapons)
-                {
-                    weapon.StopAttack(this);
-                }
-                break;
+            foreach (Weapon weapon in Inventory.Weapons)
+            {
+                weapon.StopAttack(this);
+            }
+        }
+        else
+        {
+            foreach (Weapon weapon in Inventory.Weapons)
+            {
+                weapon.StartAttack(this);
+            }
         }
     }
     #endregion
@@ -195,18 +195,16 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Death()
     {
-        StartCoroutine(OnDeath());
-    }
-
-    /// <summary>
-    /// Coroutine that control the death of the player
-    /// </summary>
-    private IEnumerator OnDeath()
-    {
-        sprite.enabled = false;
-        yield return new WaitForSeconds(1);
+        //TODO fix bug where player doesn't lose weapon on death
         GameStateManager.UpdateGameState(GameState.GameOver);
+        foreach(Weapon weapon in Inventory.Weapons)
+        {
+            weapon.StopAttack(this);
+        }
+        Inventory.Weapons.Clear();
+        currentCharacter = null;
         sprite.color = Color.white;
+        transform.position = startingPos;
     }
     #endregion
 }

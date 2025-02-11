@@ -22,12 +22,8 @@ public abstract class Enemy : MonoBehaviour
 
     [SerializeField] protected bool canMove;
 
-    IEnumerator attackRoutine;
-
     private Color baseColor = Color.white;
     private Color DamagedColor = Color.red;
-
-    private LayerMask playerLayer = 1 << 3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -85,8 +81,9 @@ public abstract class Enemy : MonoBehaviour
     {
         canMove = gameState switch
         {
-            GameState.InGame => true,
-            _ => false
+            GameState.Pause => false,
+            GameState.LevelUp => false,
+            _ =>true
         };
     }
 

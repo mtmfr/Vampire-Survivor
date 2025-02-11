@@ -8,21 +8,7 @@ public class MagicWand : Weapon
 {
     [SerializeField, Min(1)] private int nbPierceableEnemy;
 
-    public override void CreateNewProjectile()
-    {
-        int projectileToCreate = projectileAmount - currentProjectileAmount;
-
-        if (projectileToCreate == 0)
-            return;
-
-        for (int projo = 0; projo < projectileToCreate; projo++)
-        {
-            GameObject createdProjo = Instantiate(weaponOriginal, Player.playerRb.transform);
-            createdProjo.SetActive(false);
-            weaponAmmo.Add(createdProjo);
-            currentProjectileAmount++;
-        }
-    }
+    public override void CreateNewProjectile() { }
 
     public override void LevelUp()
     {
@@ -54,7 +40,6 @@ public class MagicWand : Weapon
 
     public override void StartAttack(MonoBehaviour player)
     {
-        CreateNewProjectile();
         player.StartCoroutine(AttackRoutine());
     }
 
@@ -65,20 +50,31 @@ public class MagicWand : Weapon
 
     protected override IEnumerator AttackRoutine()
     {
+        MagicWandProjectile projectile = weaponOriginal.GetComponent<MagicWandProjectile>();
         while (true)
         {
-            if (IsAnyProjectileActive() != true)
+            GameObject closestEnemy = FindClosestEnemy();
+            if (closestEnemy != null)
             {
-                foreach (GameObject spell in weaponAmmo)
+                for (int toShoot = 0; toShoot < projectileAmount; toShoot++)
                 {
-                    spell.transform.position = Player.playerRb.position;
-                    spell.SetActive(true);
-                    spell.GetComponent<MagicWandProjectile>().UpdateProjectileInfo(FindClosestEnemy(), speed, attack, nbPierceableEnemy);
+                    if (ObjectPool.IsAnyObjectInactive(projectile))
+                    {
+                        var usedProjectile = ObjectPool.GetInactiveObject(projectile);
+                        usedProjectile.transform.position = Player.playerRb.position;
+                        usedProjectile.gameObject.SetActive(true);
+                        usedProjectile.UpdateProjectileInfo(closestEnemy, speed, attack, nbPierceableEnemy);
+                    }
+                    else
+                    {
+                        GameObject usedProjectile = Instantiate(projectile.gameObject, Player.playerRb.position, Quaternion.identity);
+                        usedProjectile.GetComponent<MagicWandProjectile>().UpdateProjectileInfo(closestEnemy, speed, attack, nbPierceableEnemy);
+                    }
                     yield return new WaitForSeconds(delay);
                 }
-                yield return new WaitForSeconds(cooldown);
             }
-            else yield return new WaitForFixedUpdate();
+
+            yield return new WaitForSeconds(cooldown);
         }
     }
 
@@ -94,12 +90,12 @@ public class MagicWand : Weapon
 
     private GameObject FindClosestEnemy()
     {
-        List<Enemy> enemy = FindObjectsByType<Enemy>(FindObjectsSortMode.None).ToList();
+        List<Enemy> enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None).ToList();
 
-        if (enemy == null)
+        if (enemies.Count == 0)
             return null;
 
-        Enemy closestEnemy = enemy.OrderBy(order => Vector3.Distance(Player.playerRb.position, order.transform.position)).FirstOrDefault();
+        Enemy closestEnemy = enemies.OrderBy(order => Vector3.Distance(Player.playerRb.position, order.transform.position)).FirstOrDefault();
 
         return closestEnemy.gameObject;
     }

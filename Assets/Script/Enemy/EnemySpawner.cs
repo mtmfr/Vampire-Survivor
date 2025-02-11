@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
         TimerEvent.OnMinutesChange += SetCurrentWave;
 
         GameStateManager.OnGameStateChange += ControlSpawn;
-        GameStateManager.OnGameStateChange += OnGameEnd;
+        GameStateManager.OnGameStateChange += DeactivateEnemies;
     }
 
     private void OnDisable()
@@ -30,7 +30,7 @@ public class EnemySpawner : MonoBehaviour
         SpawnerEvent.OnSpawnPosChanged -= UpdateSpawnPos;
 
         GameStateManager.OnGameStateChange -= ControlSpawn;
-        GameStateManager.OnGameStateChange -= OnGameEnd;
+        GameStateManager.OnGameStateChange -= DeactivateEnemies;
     }
 
     #region Wave
@@ -41,7 +41,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void ControlSpawn(GameState gameState)
     {
-        Debug.Log(gameObject.name);
         if (gameState == GameState.InGame)
             StartCoroutine(CR_Spawn());
         else StopCoroutine(CR_Spawn());
@@ -53,27 +52,17 @@ public class EnemySpawner : MonoBehaviour
     }
     #endregion
 
-    private void OnGameEnd(GameState gameState)
+    private void DeactivateEnemies(GameState gameState)
     {
         if (gameState != GameState.GameOver)
             return;
 
-        List<Enemy> toDispawn = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).ToList();
+        List<Enemy> toDispawn = FindObjectsByType<Enemy>(FindObjectsSortMode.None).ToList();
 
         foreach (Enemy enemy in toDispawn)
         {
             enemy.gameObject.SetActive(false);
         }
-    }
-
-    private void SpawnEnemy()
-    {
-        if (waves.Count < enemyWavesId + 1)
-            return;
-
-        // Get the number of enemies to spawn in the current wave
-        int enemiesInWave = waves[enemyWavesId].EnemiesInWave.Count;
-
     }
 
     /// <summary>
@@ -91,7 +80,7 @@ public class EnemySpawner : MonoBehaviour
         float spawnInterval = 60 / enemiesInWave;
 
         // Loop through each enemy to spawn
-        for (int enemyId = 0; enemyId <= enemiesInWave; enemyId++)
+        for (int enemyId = 0; enemyId < enemiesInWave; enemyId++)
         {
             // Get the enemy to spawn based on the current wave's list
             Enemy enemyToSpawn = waves[enemyWavesId].EnemiesInWave[enemyId];

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -13,6 +15,16 @@ public abstract class PickableObject : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Static;
     }
 
+    private void OnEnable()
+    {
+        GameStateManager.OnGameStateChange += OnGameEnd;
+    }
+
+    private void OnDisable()
+    {
+        GameStateManager.OnGameStateChange -= OnGameEnd;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 3)
@@ -20,4 +32,12 @@ public abstract class PickableObject : MonoBehaviour
     }
 
     protected abstract void Pickup();
+
+    private void OnGameEnd(GameState gameState)
+    {
+        if (gameState != GameState.GameOver)
+            return;
+        
+        gameObject.SetActive(false);
+    }
 }
