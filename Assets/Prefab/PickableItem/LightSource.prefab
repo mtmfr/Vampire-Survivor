@@ -178,3 +178,4 @@ MonoBehaviour:
   health: 1
   droppedItems:
   - {fileID: 3081005060271102955, guid: b658eaaed043bdb47805aea364cad3a1, type: 3}
+  - {fileID: 8104280184810626902, guid: 175682b3c7ff1f548a0206bc3cc6a275, type: 3}

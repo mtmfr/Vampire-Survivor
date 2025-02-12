@@ -55,21 +55,8 @@ public class Whip : Weapon
     }
 
     #region Attack controller
-    public override void StartAttack(MonoBehaviour player)
-    {
-        player.StartCoroutine(AttackRoutine());
-    }
 
-    public override void StopAttack(MonoBehaviour player)
-    {
-        player.StopCoroutine(AttackRoutine());
-        foreach(WhipProjectile whip in ObjectPool.GetActiveObjects<WhipProjectile>())
-        {
-            whip.gameObject.SetActive(false);
-        }
-    }
-
-    protected override IEnumerator AttackRoutine()
+    public override IEnumerator AttackRoutine()
     {
         SpriteRenderer playerSprite = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
 

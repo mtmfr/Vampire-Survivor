@@ -168,13 +168,13 @@ public abstract class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-            StartAttacking();
+            StartCoroutine(AttackRoutine());
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-            StopAttacking();
+            StopAllCoroutines();
     }
 }
 

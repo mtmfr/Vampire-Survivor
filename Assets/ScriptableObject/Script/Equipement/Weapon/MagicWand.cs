@@ -40,21 +40,7 @@ public class MagicWand : Weapon
         }
     }
 
-    public override void StartAttack(MonoBehaviour player)
-    {
-        player.StartCoroutine(AttackRoutine());
-    }
-
-    public override void StopAttack(MonoBehaviour player)
-    {
-        player.StopCoroutine(AttackRoutine());
-        foreach (MagicWandProjectile projectile in ObjectPool.GetActiveObjects<MagicWandProjectile>())
-        {
-            projectile.gameObject.SetActive(false);
-        }
-    }
-
-    protected override IEnumerator AttackRoutine()
+    public override IEnumerator AttackRoutine()
     {
         while (true)
         {

@@ -36,16 +36,6 @@ public abstract class Weapon : SO_Equipement
     public abstract void CreateNewProjectile();
 
     /// <summary>
-    /// Start the attack of the weapon
-    /// </summary>
-    public abstract void StartAttack(MonoBehaviour player);
-
-    /// <summary>
-    /// stop the attack of the player
-    /// </summary>
-    public abstract void StopAttack(MonoBehaviour player);
-
-    /// <summary>
     /// Effect of the weapon level up
     /// </summary>
     public abstract void LevelUp();
@@ -53,5 +43,5 @@ public abstract class Weapon : SO_Equipement
     /// <summary>
     /// Logic of the attack
     /// </summary>
-    protected abstract IEnumerator AttackRoutine();
+    public abstract IEnumerator AttackRoutine();
 }

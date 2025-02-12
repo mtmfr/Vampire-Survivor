@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -25,6 +26,8 @@ public class Player : MonoBehaviour
     private float speed;
     #endregion
 
+    private List<Weapon> weaponsHeld = new(6);
+
     [SerializeField] private SO_Character currentCharacter;
 
     private Vector2 startingPos = Vector2.zero;
@@ -46,7 +49,6 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         damageFx = GetComponent<AudioSource>();
-
 
         maxHp = playerStats.Health;
         speed = playerStats.Speed;
@@ -95,7 +97,8 @@ public class Player : MonoBehaviour
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
 
         Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
-        Inventory.NewWeaponGot(startWeapon);
+        weaponsHeld.Clear();
+        weaponsHeld.Add(startWeapon);
 
         hp = maxHp;
         PlayerEvent.UpdateHealth((float)hp / maxHp);
@@ -145,23 +148,22 @@ public class Player : MonoBehaviour
     {
         if (state != GameState.InGame)
         {
-            foreach (Weapon weapon in Inventory.Weapons)
+            foreach (Weapon weapon in weaponsHeld)
             {
-                weapon.StopAttack(this);
+                StopCoroutine(weapon.AttackRoutine());
             }
         }
         else
         {
-            foreach (Weapon weapon in Inventory.Weapons)
+            foreach (Weapon weapon in weaponsHeld)
             {
-                weapon.StartAttack(this);
+                StartCoroutine(weapon.AttackRoutine());
             }
         }
     }
     #endregion
 
     #region health related function
-
     private void RegainHealth(int healthRegained)
     {
         if (hp + healthRegained >= maxHp)
@@ -201,11 +203,10 @@ public class Player : MonoBehaviour
     {
         //TODO fix bug where player doesn't lose weapon on death
         GameStateManager.UpdateGameState(GameState.GameOver);
-        foreach(Weapon weapon in Inventory.Weapons)
+        foreach(Weapon weapon in weaponsHeld)
         {
-            weapon.StopAttack(this);
+            StopCoroutine(weapon.AttackRoutine());
         }
-        Inventory.Weapons.Clear();
         currentCharacter = null;
         sprite.color = Color.white;
         transform.position = startingPos;

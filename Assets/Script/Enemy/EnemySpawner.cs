@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     private List<Vector3> enemySpawnPos = new();
     [SerializeField] private float spawnPosOffset;
 
+    [SerializeField] private Reaper reaper;
 
     private void OnEnable()
     {
@@ -73,8 +74,19 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private IEnumerator CR_Spawn()
     {
-        if (waves.Count < enemyWavesId + 1)
-            GameStateManager.UpdateGameState(GameState.GameOver);
+        if (waves.Count <= enemyWavesId + 1)
+        {
+            Vector3 reaperSpawnPos = Camera.main.ScreenToWorldPoint(new Vector3(0.5f, 0.5f));
+            if (ObjectPool.IsAnyObjectInactive(reaper))
+            {
+                GameObject reaperObject = ObjectPool.GetInactiveObject(reaper).gameObject;
+                reaperObject.transform.position = reaperSpawnPos;
+            }
+            else
+            {
+                Instantiate(reaper.gameObject, reaperSpawnPos, Quaternion.identity);
+            }
+        }
 
         // Get the number of enemies to spawn in the current wave
         int enemiesInWave = waves[enemyWavesId].EnemiesInWave.Count;
