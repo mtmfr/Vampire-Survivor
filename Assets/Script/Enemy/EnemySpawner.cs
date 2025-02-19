@@ -88,10 +88,8 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        // Get the number of enemies to spawn in the current wave
         int enemiesInWave = waves[enemyWavesId].EnemiesInWave.Count;
 
-        // Calculate the time interval between each spawn based on the number of enemies
         float spawnInterval = 60 / enemiesInWave;
 
         // Loop through each enemy to spawn
@@ -129,25 +127,20 @@ public class EnemySpawner : MonoBehaviour
 
     #region SpawnPosition
     /// <summary>
-    /// This function returns a random spawn position for an enemy.
+    /// Get a random spawn position
     /// </summary>
     private Vector3 GetSpawnPosition()
     {
-        // Checks if there are no positions in the enemySpawnPos list, and if so, throws an exception.
         if (enemySpawnPos.Count == 0)
             throw new ArgumentNullException("enemyPos.Count", "No object in enemySpawnPos");
 
-        // Randomly selects an index from the enemySpawnPos list.
-        int randSpawnPosId = UnityEngine.Random.Range(0, enemySpawnPos.Count - 1);
+        int randSpawnPosId = UnityEngine.Random.Range(0, enemySpawnPos.Count);
 
-        // Retrieves the base spawn position from the list using the randomly selected index.
         Vector3 baseSpawnPos = enemySpawnPos[randSpawnPosId];
 
-        // Generates random x and y coordinates within a defined offset from the base spawn position.
         float xPos = UnityEngine.Random.Range(baseSpawnPos.x - spawnPosOffset, baseSpawnPos.x + spawnPosOffset);
         float yPos = UnityEngine.Random.Range(baseSpawnPos.y - spawnPosOffset, baseSpawnPos.y + spawnPosOffset);
 
-        // Returns the newly calculated random spawn position as a Vector3.
         return new Vector3(xPos, yPos);
     }
 

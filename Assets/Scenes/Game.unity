@@ -2449,8 +2449,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentLevel: {fileID: 0}
-  stageBg: {fileID: 5505274397315154127, guid: 2b87d191911e9254082fb654618735ad, type: 3}
+  stageTile: {fileID: -7796251873342451662, guid: 2b87d191911e9254082fb654618735ad, type: 3}
   lightSource: {fileID: 2773497805920049817, guid: 989163eb093942542800bb8595d53371, type: 3}
+  gridSize: {x: 7, y: 5}
   lightsourceSpawnChance: 10
 --- !u!4 &843101091
 Transform:
@@ -3558,6 +3559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves: []
   spawnPosOffset: 5
+  reaper: {fileID: 0}
 --- !u!4 &1557270655
 Transform:
   m_ObjectHideFlags: 0
