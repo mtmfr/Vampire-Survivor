@@ -6,7 +6,7 @@ public class SO_Character : ScriptableObject
     [field: SerializeField] public string characterName { get; protected set; }
     [field: SerializeField] public Sprite CharacterSprite { get; protected set; }
     [field: SerializeField] public RuntimeAnimatorController CharacterAnim { get; protected set; }
-    [field: SerializeField] public Weapon StartingWeapon { get; protected set; }
+    [field: SerializeField] public SO_Weapon StartingWeapon { get; protected set; }
 
     private void OnValidate()
     {

@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     private float speed;
     #endregion
 
-    private List<Weapon> weaponsHeld = new(6);
+    private List<SO_Weapon> weaponsHeld = new(6);
 
     [SerializeField] private SO_Character currentCharacter;
 
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
         sprite.sprite = currentCharacter.CharacterSprite;
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
 
-        Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
+        SO_Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
         weaponsHeld.Clear();
         weaponsHeld.Add(startWeapon);
 
@@ -148,14 +148,14 @@ public class Player : MonoBehaviour
     {
         if (state != GameState.InGame)
         {
-            foreach (Weapon weapon in weaponsHeld)
+            foreach (SO_Weapon weapon in weaponsHeld)
             {
                 StopCoroutine(weapon.AttackRoutine());
             }
         }
         else
         {
-            foreach (Weapon weapon in weaponsHeld)
+            foreach (SO_Weapon weapon in weaponsHeld)
             {
                 StartCoroutine(weapon.AttackRoutine());
             }
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
     {
         //TODO fix bug where player doesn't lose weapon on death
         GameStateManager.UpdateGameState(GameState.GameOver);
-        foreach(Weapon weapon in weaponsHeld)
+        foreach(SO_Weapon weapon in weaponsHeld)
         {
             StopCoroutine(weapon.AttackRoutine());
         }

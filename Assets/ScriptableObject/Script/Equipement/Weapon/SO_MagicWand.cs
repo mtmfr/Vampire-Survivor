@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MagicWand", menuName = "Scriptable Objects/Equipement/Weapon/MagicWand")]
-public class MagicWand : Weapon
+public class SO_MagicWand : SO_Weapon
 {
     [SerializeField, Min(1)] private int nbPierceableEnemy;
 

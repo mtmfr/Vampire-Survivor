@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Weapon/Whip", menuName = "Scriptable Objects/Equipement/Weapon/Whip")]
-public class Whip : Weapon
+public class SO_Whip : SO_Weapon
 {
     [Header("Weapon")]
 
