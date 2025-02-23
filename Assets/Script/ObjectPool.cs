@@ -31,18 +31,13 @@ public static class ObjectPool
         return Tobjects.Count != 0;
     }
 
-    public static T GetInactiveObject<T>(T objectToGet) where T : MonoBehaviour
+    public static T GetInactiveObject<T>() where T : MonoBehaviour
     {
         // Retrieve all objects of type T, including inactive ones
-        List<T> values = GameObject.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(element =>
+        T inactiveObject = GameObject.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(element =>
         {
-            bool type = element.GetType() == objectToGet.GetType();
-
-            return type;
-        }).ToList();
-
-        // Find the first inactive object (inactive objects won't be active in the hierarchy)
-        T inactiveObject = values.FirstOrDefault(chose => !chose.gameObject.activeInHierarchy);
+            return element.gameObject.activeInHierarchy == false;
+        }).FirstOrDefault();
 
         // Return the first inactive object found, or null if none found
         return inactiveObject;

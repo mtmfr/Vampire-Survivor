@@ -155,7 +155,7 @@ public abstract class Enemy : MonoBehaviour
     {
         if (ObjectPool.IsAnyObjectInactive(xp))
         {
-            GameObject xpToSpawn = ObjectPool.GetInactiveObject(xp).gameObject;
+            GameObject xpToSpawn = ObjectPool.GetInactiveObject<XpPoint>().gameObject;
             xpToSpawn.transform.position = transform.position;
             xpToSpawn.SetActive(true);
         }

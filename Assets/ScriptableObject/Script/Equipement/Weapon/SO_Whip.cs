@@ -97,7 +97,7 @@ public class SO_Whip : SO_Weapon
 
         if (ObjectPool.IsAnyObjectInactive(whipProjectile))
         {
-            WhipProjectile whip = ObjectPool.GetInactiveObject(whipProjectile);
+            WhipProjectile whip = ObjectPool.GetInactiveObject<WhipProjectile>();
 
             DrawAttackHitbox(LeftWhipPos);
 
@@ -123,7 +123,7 @@ public class SO_Whip : SO_Weapon
 
         if (ObjectPool.IsAnyObjectInactive(whipProjectile))
         {
-            var whip = ObjectPool.GetInactiveObject(whipProjectile);
+            var whip = ObjectPool.GetInactiveObject<WhipProjectile>();
             
             DrawAttackHitbox(RightWhipPos);
 

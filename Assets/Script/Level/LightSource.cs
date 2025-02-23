@@ -72,7 +72,7 @@ public class LightSource : MonoBehaviour
 
         if (ObjectPool.IsAnyObjectInactive(objectToDrop))
         {
-            GameObject objectToActivate = ObjectPool.GetInactiveObject(objectToDrop).gameObject;
+            GameObject objectToActivate = ObjectPool.GetInactiveObject<PickableObject>().gameObject;
             objectToActivate.transform.position = transform.position;
             objectToActivate.SetActive(true);
         }

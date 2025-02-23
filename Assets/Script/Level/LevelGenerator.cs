@@ -204,7 +204,7 @@ public class LevelGenerator : MonoBehaviour
 
         if (ObjectPool.IsAnyObjectInactive(lightSourceToSpawn))
         {                
-            lightSourceToSpawn = ObjectPool.GetInactiveObject(lightSourceToSpawn);
+            lightSourceToSpawn = ObjectPool.GetInactiveObject<LightSource>();
             lightSourceToSpawn.gameObject.transform.position = spawnPos;
             lightSourceToSpawn.gameObject.SetActive(true);
         }

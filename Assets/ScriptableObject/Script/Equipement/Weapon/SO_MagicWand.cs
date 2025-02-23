@@ -51,7 +51,7 @@ public class SO_MagicWand : SO_Weapon
                 {
                     if (ObjectPool.IsAnyObjectInactive(projectile))
                     {
-                        var usedProjectile = ObjectPool.GetInactiveObject(projectile);
+                        var usedProjectile = ObjectPool.GetInactiveObject< MagicWandProjectile>();
                         usedProjectile.transform.position = Player.playerRb.position;
                         usedProjectile.gameObject.SetActive(true);
                         usedProjectile.UpdateProjectileInfo(closestEnemy, speed, attack, nbPierceableEnemy);

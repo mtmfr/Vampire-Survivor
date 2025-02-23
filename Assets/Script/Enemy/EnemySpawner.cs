@@ -79,7 +79,7 @@ public class EnemySpawner : MonoBehaviour
             Vector3 reaperSpawnPos = Camera.main.ScreenToWorldPoint(new Vector3(0.5f, 0.5f));
             if (ObjectPool.IsAnyObjectInactive(reaper))
             {
-                GameObject reaperObject = ObjectPool.GetInactiveObject(reaper).gameObject;
+                GameObject reaperObject = ObjectPool.GetInactiveObject<Reaper>().gameObject;
                 reaperObject.transform.position = reaperSpawnPos;
             }
             else
@@ -113,7 +113,7 @@ public class EnemySpawner : MonoBehaviour
             else
             {
                 // If an inactive object is available in the pool, reuse it
-                Enemy enemy = ObjectPool.GetInactiveObject(enemyToSpawn);
+                Enemy enemy = ObjectPool.GetInactiveObject<Enemy>();
 
                 // Set the position of the reused enemy and activate it
                 enemy.transform.position = spawnPos;
