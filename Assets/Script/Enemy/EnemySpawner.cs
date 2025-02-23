@@ -149,7 +149,7 @@ public class EnemySpawner : MonoBehaviour
         enemySpawnPos.Clear();
         foreach(Vector3 spawnPosition in spawnPositions)
         {
-            if (spawnPosition.HasNaanValue(spawnPosition))
+            if (spawnPosition.HasNaanValue())
                 continue;
 
             enemySpawnPos.Add(spawnPosition);

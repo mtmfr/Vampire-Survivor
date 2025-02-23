@@ -42,7 +42,7 @@ public static class GameStateManager
     }
 }
 
-public enum GameState
+public enum GameState : byte
 {
     Menu,
     InGame,

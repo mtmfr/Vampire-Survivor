@@ -71,37 +71,44 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < gridSize.y; column++)
             {
                 offset = Vector3.Scale(spriteSize, new Vector3(row - gridSize.x / 2, column - gridSize.y / 2));
+                //offset = new Vector3(row - gridSize.x/2, column - gridSize.y/2, 0);
+
                 Vector3 spawnPosition = transform.position + offset;
 
                 LevelTile tileToSpawn = Instantiate(stageTile, spawnPosition, Quaternion.Euler(Vector3.zero));
                 tiles.Add(tileToSpawn);
+                tileToSpawn.name = $"x:{row}, y:{column}";
 
                 if (offset == Vector3.zero)
                     SetTriggerTiles(tileToSpawn);
+                spawnPosition = transform.position + offset;
 
-                //Set the spawner tiles of the game
-                //Defined a tile as spawner if :
-                //row = 0 or gridsize.x
-                //or column = 0 or gridSize.y
-                int spawnerXId = 0;
-                int spawnerYId = 0;
+                //Set the spawner tiles
+                //Update the positions id of the tile depending of it's offset
+                //Define a spawner tile as one which it's xPosIs + YPosId > 0
+                int xPosId = 0;
+                int yPosId = 0;
 
-                if (row == 0)
-                    spawnerXId = -1;
-                else if (row == gridSize.x)
-                    spawnerXId = 1;
+                float currentXOffset = row - gridSize.x / 2;
+                float minXOffest = 0 - gridSize.x / 2;
+                float maxXOffset = 0 + gridSize.x / 2;
 
-                if (column == 0)
-                    spawnerYId = -1;
-                else if (column == gridSize.y)
-                    spawnerYId = 1;
+                if (currentXOffset == minXOffest)
+                    xPosId = -1;
+                else if (currentXOffset == maxXOffset)
+                    xPosId = 1;
 
-                if ((Mathf.Abs(spawnerXId) == 1 && Mathf.Abs(spawnerYId) != 1))
-                    SetSpawnPos(tileToSpawn, spawnerXId, 0);
-                else if (Mathf.Abs(spawnerXId) != 1 && Mathf.Abs(spawnerYId) == 1)
-                    SetSpawnPos(tileToSpawn, 0, spawnerYId);
-                else if (Mathf.Abs(spawnerXId) == 1 && Mathf.Abs(spawnerYId) == 1)
-                    SetSpawnPos(tileToSpawn, spawnerXId, spawnerYId);
+                float currentYOffset = column - gridSize.y / 2;
+                float minYOffset = 0 - gridSize.y / 2;
+                float maxYOffset = 0 + gridSize.y / 2;
+
+                if (currentYOffset == minYOffset)
+                    yPosId = -1;
+                else if(currentYOffset == maxYOffset)
+                    yPosId = 1;
+
+                if (Mathf.Abs(xPosId) + Mathf.Abs(yPosId) > 0)
+                    SetSpawnPos(tileToSpawn, xPosId, yPosId);
             }
         }
 
@@ -121,7 +128,7 @@ public class LevelGenerator : MonoBehaviour
 
             Vector3 nextPos = Vector3.Scale(currentLevel.BgSprite.bounds.size, dir);
 
-            if (!nextPos.HasNaanValue(nextPos))
+            if (!nextPos.HasNaanValue())
                 tile.transform.position += nextPos;
         }
 
@@ -133,7 +140,6 @@ public class LevelGenerator : MonoBehaviour
     #endregion
 
     #region setTiles
-
     /// <summary>
     /// Set the data of the spawner tile
     /// </summary>
@@ -235,7 +241,7 @@ public class LevelGenerator : MonoBehaviour
             if (!spawnerTile.isSpawner)
                 continue;
 
-            if (spawnerTile.transform.position.HasNaanValue(spawnerTile.transform.position))
+            if (spawnerTile.transform.position.HasNaanValue())
                 continue;
 
             spawnPositions.Add(Vector3Int.CeilToInt(spawnerTile.transform.position));
@@ -253,7 +259,7 @@ public class LevelGenerator : MonoBehaviour
             if (spawnerTile == null)
                 continue;
 
-            if (spawnerTile.transform.position.HasNaanValue(spawnerTile.transform.position))
+            if (spawnerTile.transform.position.HasNaanValue())
                 continue;
 
             if (spawnerTile.posId != Vector2Int.CeilToInt(dir))
@@ -266,19 +272,14 @@ public class LevelGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Get a random poisition
     /// </summary>
-    /// <returns>A random spawn position</returns>
     private Vector3Int GetRandomSpawnPosition()
     {
         if (spawnPositions.Count == 0)
             throw new NullReferenceException("no object in spawnPosition");
 
-        //Take a random position as vector3Int
         int randomId = UnityEngine.Random.Range(0, spawnPositions.Count);
-
-        if (randomId < 0 || randomId > spawnPositions.Count)
-            Debug.Log(randomId);
 
         return spawnPositions[randomId];
     }
