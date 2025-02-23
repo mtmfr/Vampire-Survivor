@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fe185142ed354b4ba7fb6f331b9150d, type: 3}
   m_Name: WI_Whip
   m_EditorClassIdentifier: 
-  weaponOriginal: {fileID: 7272144856290100873, guid: 5161b980811adef4cab20dc710fe3314, type: 3}
-  offsetFromPlayer: 3
+  <weaponOriginal>k__BackingField: {fileID: 7272144856290100873, guid: 5161b980811adef4cab20dc710fe3314, type: 3}
+  <offset>k__BackingField: 3
   level: 1
-  maxLevel: 0
-  attack: 3
-  projectileAmount: 2
-  speed: 1
-  cooldown: 1
-  delay: 0
-  attackHitbox: {x: 3.3, y: 1.25}
+  <attack>k__BackingField: 5
+  <pierce>k__BackingField: 0
+  <projectileAmount>k__BackingField: 1
+  <speed>k__BackingField: 3
+  <cooldown>k__BackingField: 0.7
+  <delay>k__BackingField: 0.2

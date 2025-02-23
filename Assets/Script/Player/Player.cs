@@ -26,21 +26,13 @@ public class Player : MonoBehaviour
     private float speed;
     #endregion
 
-    private List<SO_Weapon> weaponsHeld = new(6);
-
     [SerializeField] private SO_Character currentCharacter;
 
     private Vector2 startingPos = Vector2.zero;
 
     [SerializeField] private bool canMove;
 
-    public static Rigidbody2D playerRb;
-
     #region unity functions
-    private void Awake()
-    {
-        playerRb = GetComponent<Rigidbody2D>();
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -62,8 +54,6 @@ public class Player : MonoBehaviour
         PlayerEvent.OnRegainHealth += RegainHealth;
 
         GameStateManager.OnGameStateChange += UpdateCanMove;
-        GameStateManager.OnGameStateChange += Attack;
-
         EnemyEvent.OnPlayerReached += TakeDamage;
     }
 
@@ -73,7 +63,6 @@ public class Player : MonoBehaviour
         PlayerEvent.OnRegainHealth -= RegainHealth;
 
         GameStateManager.OnGameStateChange -= UpdateCanMove;
-        GameStateManager.OnGameStateChange -= Attack;
 
         EnemyEvent.OnPlayerReached -= TakeDamage;
     }
@@ -96,9 +85,9 @@ public class Player : MonoBehaviour
         sprite.sprite = currentCharacter.CharacterSprite;
         anim.runtimeAnimatorController = currentCharacter.CharacterAnim;
 
-        SO_Weapon startWeapon = Instantiate(currentCharacter.StartingWeapon);
-        weaponsHeld.Clear();
-        weaponsHeld.Add(startWeapon);
+        Weapon startWeapon = Instantiate(currentCharacter.Weapon);
+        Inventory.ClearWeaponList();
+        Inventory.AddNewWeapon(startWeapon);
 
         hp = maxHp;
         PlayerEvent.UpdateHealth((float)hp / maxHp);
@@ -143,26 +132,6 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region Attack
-    private void Attack(GameState state)
-    {
-        if (state != GameState.InGame)
-        {
-            foreach (SO_Weapon weapon in weaponsHeld)
-            {
-                StopCoroutine(weapon.AttackRoutine());
-            }
-        }
-        else
-        {
-            foreach (SO_Weapon weapon in weaponsHeld)
-            {
-                StartCoroutine(weapon.AttackRoutine());
-            }
-        }
-    }
-    #endregion
-
     #region health related function
     private void RegainHealth(int healthRegained)
     {
@@ -203,10 +172,6 @@ public class Player : MonoBehaviour
     {
         //TODO fix bug where player doesn't lose weapon on death
         GameStateManager.UpdateGameState(GameState.GameOver);
-        foreach(SO_Weapon weapon in weaponsHeld)
-        {
-            StopCoroutine(weapon.AttackRoutine());
-        }
         currentCharacter = null;
         sprite.color = Color.white;
         transform.position = startingPos;

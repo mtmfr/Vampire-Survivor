@@ -5,43 +5,27 @@ using UnityEngine;
 public abstract class SO_Weapon : SO_Equipement
 {
     [Header("Weapon")]
-    [SerializeField] protected GameObject weaponOriginal;
-    protected List<GameObject> weaponAmmo = new();
+    [field: SerializeField] public GameObject weaponOriginal { get; protected set; }
 
     [Header("Spawn offset")]
-    [SerializeField] protected float offsetFromPlayer;
+    [field: SerializeField] public float offset { get; protected set; }
  
     [Header("Weapon stats")]
     [Tooltip("Level of the weapon")]
     [SerializeField, Min(1)] protected int level;
-    [SerializeField] protected byte maxLevel;
-    [SerializeField, Min(0)] protected int attack;
+    [field: SerializeField, Min(1)] public int attack { get; protected set; }
+    [field: SerializeField] public int pierce { get; protected set; }
 
-    [SerializeField, Min(0)] protected int projectileAmount;
-    protected int currentProjectileAmount;
+    [field: SerializeField, Min(0)] public int projectileAmount { get; protected set; }
+
     [Tooltip("Speed at which the weapon moves. Not used on every weapon")]
-    [SerializeField, Min(0)] protected float speed;
+    [field: SerializeField, Min(0)] public float speed { get; protected set; }
 
     [Header("Time (in seconds)")]
-    [Tooltip("Time between 2 salvos of attack")]
-    [SerializeField, Min(0.1f)] protected float cooldown;
-    [Tooltip("delay between 2 ammo in a salvo")]
-    [SerializeField, Min(0)] protected float delay;
+    [Tooltip("Time between 2 salves of attack")]
+    [field: SerializeField, Min(0.1f)] public float cooldown { get; protected set; }
+    [Tooltip("delay between 2 ammo in a salves")]
+    [field: SerializeField, Min(0)] public float delay {  get; protected set; }
 
-    protected LayerMask attackLayer = 1 << 6;
-
-    /// <summary>
-    /// Create all the projectiles used by the wepon
-    /// </summary>
-    public abstract void CreateNewProjectile();
-
-    /// <summary>
-    /// Effect of the weapon level up
-    /// </summary>
-    public abstract void LevelUp();
-
-    /// <summary>
-    /// Logic of the attack
-    /// </summary>
-    public abstract IEnumerator AttackRoutine();
+    public LayerMask attackLayer { get; private set; } = 1 << 6;
 }

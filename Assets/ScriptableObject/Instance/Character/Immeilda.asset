@@ -15,4 +15,4 @@ MonoBehaviour:
   <characterName>k__BackingField: Immeilda
   <CharacterSprite>k__BackingField: {fileID: -5158917764184335077, guid: 0a7a8eab1aa605a4ba93721f4fc33e99, type: 3}
   <CharacterAnim>k__BackingField: {fileID: 9100000, guid: be31821a72eff544fa564c138757c51d, type: 2}
-  <StartingWeapon>k__BackingField: {fileID: 11400000, guid: ca0ed95f36cb9c14488a9e8db389e92f, type: 2}
+  <Weapon>k__BackingField: {fileID: 275119489410251846, guid: 4bb419a674ac64e4884e810d861e0ae9, type: 3}

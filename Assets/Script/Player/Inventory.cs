@@ -1,20 +1,42 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Rendering;
 
 public static class Inventory
 {
     public static int gold;
-    public static List<SO_Weapon> Weapons { get; private set; } = new(6);
 
-    public static void NewWeaponGot(SO_Weapon newWeapon)
+    private static int weaponsInInventory = 0;
+    private static Weapon[] weapons = new Weapon[6];
+
+    public static event Action<Weapon> OnWeaponObtained;
+    public static void AddNewWeapon(Weapon weaponToAdd)
     {
-        Weapons.Add(newWeapon);
+        if (weaponToAdd == null)
+            throw new NullReferenceException("Ther is no weapon to add");
+
+        if (weapons.Contains(weaponToAdd))
+        {
+            weaponToAdd.LevelUp();
+            return;
+        }
+
+        if (weaponsInInventory + 1 == weapons.Length)
+            return;
+
+        weapons[weaponsInInventory] = weaponToAdd;
+        OnWeaponObtained?.Invoke(weaponToAdd);
+
+        weaponsInInventory++;
     }
 
     public static void ClearWeaponList()
     {
-        Weapons.Clear();
+        for (int Id = 0; Id < weapons.Length; Id++)
+        {
+            weapons[Id] = null;
+        }
     }
 
     public static event Action<int> OnGoldValueChanged;
